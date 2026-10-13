@@ -45,19 +45,19 @@ tools/build.sh x86_64-linux debug
 
 Outputs are in `dist/<platform>/MOON/`. Bob is downloaded from the official release and checked against the pinned SHA-256. The explicit Box2D 3 app manifest requires Defold’s official native build service (`build.defold.com`). On cloud machines with `HTTPS_PROXY`, the build script uses a loopback bridge because Bob’s native client ignores that variable; upstream TLS verification remains enabled. No local Android SDK is required for the tested Bob debug APK build. This phase uses a generated **debug** key only, never store/release signing. Keep keys/password files ignored.
 
-[Build workflow and downloadable Android APK](https://github.com/bongohorse/moon/actions/workflows/build.yml): artifacts are named `moon-arm64-android` and retained 14 days. The zip contains `MOON.apk`; sideload only on a suitable ARM64 Android test device. CI validates Lua logic and Renovate, builds release HTML5/debug Android, and runs a debug HTML5 physics smoke test before Pages deployment. Action SHAs, Node and Java versions are pinned. No native extensions or external asset CDN is used.
+[Build workflow and downloadable Android APK](https://github.com/bongohorse/moon/actions/workflows/build.yml): artifacts are named `moon-arm64-android` and retained 14 days. The zip contains `MOON.apk`; sideload only on a suitable ARM64 Android test device. CI validates Lua logic and Renovate, builds release HTML5/debug Android, and runs a debug HTML5 physics smoke test before Pages deployment. Action SHAs, Node and Java versions are pinned. The integrated physics engine selection uses the documented app manifest; no third-party gameplay extension or external asset CDN is used.
 
 ## Layout
 
 - `main/`: start scene, resources, renderer and Defold GUI.
 - `modules/`: vehicle, terrain, input, camera, shared state and central physics configuration.
-- `assets/`: original modular rover/wheel/terrain/ridge sprites in one atlas.
+- `assets/`: original modular rover/wheel/spring/scenery/UI sprites in one atlas, closed soil mesh and locally bundled DejaVu font with its upstream notice.
 - `tests/`: independent Lua logic, actual Renovate extraction and Chromium functional tests.
-- `tools/`: pinned checksum-verified Defold build script.
+- `tools/`: pinned checksum-verified Defold build script and reproducible artwork generator.
 - `docs/`: [decisions/API evidence](docs/decisions.md), [phase plan](docs/plan.md), [validation](docs/validation.md), reference access record.
 
 ## Boundaries
 
-Phase one ends at owner acceptance. No battery/delivery/progression mechanics or further gameplay phases are started. The concept images were not technically accessible; visual fidelity needs review once the originals are supplied. No project/asset license was selected by the owner; licensing remains open.
+Phase one ends at owner acceptance. No battery/delivery/progression mechanics or further gameplay phases are started. Both concept images were visually inspected for the phase-one correction. Their original files remain unavailable for archival; see [reference access and provenance](docs/references/README.md) and [visual comparisons](docs/visual-review/README.md). Visual acceptance remains with the owner. No project/asset license was selected by the owner; licensing remains open.
 
 60 FPS is a target, not a measured mobile guarantee. Automated headless Chromium and emulated touch are separate from manual desktop control and real-device testing. No Android/iOS device was attached; no device installation or device acceptance is claimed. See the validation record for actual evidence and remaining limits.

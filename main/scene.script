@@ -4,6 +4,7 @@ local terrain=require 'modules.terrain'
 local input=require 'modules.input'
 local camera=require 'modules.camera'
 local config=require 'modules.config'
+local art=require 'modules.art'
 local function decor(pos,size,color)
     local id=factory.create('#pixel',pos,nil,nil,vmath.vector3(size.x/8,size.y/8,1))
     go.set(msg.url(nil,id,'sprite'),'tint',color)
@@ -19,23 +20,9 @@ local function restart(self)
 end
 function init(self)
     terrain.create(); restart(self)
-    self.stars={}
-    for i=1,30 do
-        local x=(i*173)%1500; local y=450+(i*79)%240
-        self.stars[i]={id=decor(vmath.vector3(x,y,-0.8),vmath.vector3(2,2,1),vmath.vector4(0.55,0.6,0.8,1)),x=x,y=y}
-    end
-    self.ridges={}
-    for i=1,9 do
-        local x=(i-1)*240
-        local id=decor(vmath.vector3(x,320,-0.6),vmath.vector3(300,130,1),vmath.vector4(0.65,0.65,0.8,1))
-        sprite.play_flipbook(msg.url(nil,id,'sprite'),'ridge')
-        go.set_scale(vmath.vector3(300/256,130/128,1),id)
-        self.ridges[i]={id=id,x=x}
-    end
+    self.art=art.create()
     decor(vmath.vector3(terrain.finish,310,0.3),vmath.vector3(5,160,1),vmath.vector4(0.4,1,0.95,1))
     decor(vmath.vector3(terrain.finish+40,380,0.3),vmath.vector3(85,35,1),vmath.vector4(1,0.65,0.3,1))
-    self.arms={}
-    for i=1,2 do self.arms[i]=decor(vmath.vector3(),vmath.vector3(6,40,1),vmath.vector4(0.67,0.92,0.91,1)) end
     window.set_listener(function(_,event)
         if event==window.WINDOW_EVENT_FOCUS_LOST or event==window.WINDOW_EVENT_ICONIFIED then
             state.paused=true; input.clear(state.input)
@@ -57,20 +44,7 @@ end
 function update(self,dt)
     local p=go.get_position(self.vehicle.body)
     camera.update(state,p,dt,false)
-    for _,star in ipairs(self.stars) do
-        go.set_position(vmath.vector3(state.camera_x+((star.x-state.camera_x*0.08)%1900)-100,star.y+state.camera_y*0.8,-0.8),star.id)
-    end
-    for _,r in ipairs(self.ridges) do
-        go.set_position(vmath.vector3(state.camera_x+((r.x-state.camera_x*0.25)%2400)-300,320+state.camera_y*0.7,-0.6),r.id)
-    end
-    for i,w in ipairs(self.vehicle.wheels) do
-        local anchor=p+vmath.rotate(go.get_rotation(self.vehicle.body),vmath.vector3(i==1 and -57 or 57,-10,0))
-        local wp=go.get_position(w); local delta=anchor-wp
-        local middle=(anchor+wp)*0.5; middle.z=0.15
-        go.set_position(middle,self.arms[i])
-        go.set_rotation(vmath.quat_rotation_z(math.atan2(delta.y,delta.x)-math.pi/2),self.arms[i])
-        go.set_scale(vmath.vector3(0.75,vmath.length(delta)/8,1),self.arms[i])
-    end
+    art.update(self.art,state,self.vehicle)
     -- Test harness reads telemetry only; it cannot change simulation state.
     if html5 and html5.run then
         html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s,spin:%.3f};',

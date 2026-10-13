@@ -1,0 +1,5 @@
+material: "/main/terrain.material"
+vertices: "/assets/terrain.buffer"
+textures: "/assets/soil.png"
+primitive_type: PRIMITIVE_TRIANGLES
+position_stream: "position"
