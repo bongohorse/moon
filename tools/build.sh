@@ -19,4 +19,8 @@ case "$platform" in
   x86_64-linux) architectures=x86_64-linux ;;
   *) echo "Unsupported build target: $platform" >&2; exit 2 ;;
 esac
-java -jar "$bob" --platform "$platform" --architectures "$architectures" --variant "$variant" --archive --max-cpu-threads 3 --bundle-output "dist/$platform" resolve build bundle
+command=(java -jar "$bob")
+if [[ -n "${HTTPS_PROXY:-}" ]]; then
+  command=(python3 tools/with_build_proxy.py "${command[@]}")
+fi
+"${command[@]}" --platform "$platform" --architectures "$architectures" --variant "$variant" --archive --max-cpu-threads 3 --bundle-output "dist/$platform" resolve build bundle

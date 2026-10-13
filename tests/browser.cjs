@@ -12,7 +12,7 @@ const {chromium}=require('playwright');
     browser=await chromium.launch({...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{}),args:['--no-sandbox']});
     const page=await browser.newPage({viewport:{width:1280,height:720}});
     const errors=[]; let backend=false;
-    page.on('console',m=>{if(m.text().includes('ERROR:'))errors.push(m.text());if(m.text().includes('Box2D v2.2.1'))backend=true});
+    page.on('console',m=>{if(m.text().includes('ERROR:'))errors.push(m.text());if(m.text().includes('Box2D v3.1.0'))backend=true});
     page.on('pageerror',e=>errors.push(e.message));
     await page.goto(url);
     await page.waitForFunction(()=>window.moonTelemetry,{},{timeout:30000});
