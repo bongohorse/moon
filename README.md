@@ -17,7 +17,7 @@ tools/build.sh wasm-web debug
 npm run test:browser
 ```
 
-The browser test installs Chromium separately with `npx playwright install chromium`; a system Chromium can be selected with `CHROMIUM_PATH=/usr/bin/chromium`. For manual HTML5 testing:
+The browser test installs Chromium separately with `npx playwright install chromium`; a system Chromium can be selected with `CHROMIUM_PATH=/usr/bin/chromium`, but the managed Headless Shell matches CI and is recommended for acceptance checks. For manual HTML5 testing:
 
 ```sh
 python3 -m http.server 8000 --directory dist/wasm-web/MOON
