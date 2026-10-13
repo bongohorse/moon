@@ -1,0 +1,13 @@
+type: COLLISION_OBJECT_TYPE_DYNAMIC
+mass: 2
+friction: 1.5
+restitution: 0.02
+group: "wheel"
+mask: "ground"
+linear_damping: 0.02
+angular_damping: 0.1
+embedded_collision_shape {
+ shapes { shape_type: TYPE_SPHERE position { x: 0 y: 0 z: 0 } rotation { x: 0 y: 0 z: 0 w: 1 } index: 0 count: 1 }
+ data: 24 
+
+}

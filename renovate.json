@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["npm", "github-actions", "custom.regex"],
+  "automerge": false,
+  "minimumReleaseAge": "3 days",
+  "prConcurrentLimit": 3,
+  "customManagers": [{
+    "customType": "regex",
+    "managerFilePatterns": ["/^tools/defold-version\\.env$/"],
+    "matchStrings": ["DEFOLD_VERSION=(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+    "depNameTemplate": "defold/defold",
+    "datasourceTemplate": "github-releases",
+    "versioningTemplate": "semver"
+  }],
+  "packageRules": [{
+    "matchPackageNames": ["defold/defold"],
+    "allowedVersions": "/^\\d+\\.\\d+\\.\\d+$/",
+    "labels": ["physics", "ci"],
+    "prBodyNotes": ["Engine changes require review of backend compatibility and vehicle feel. Update BOB_SHA256 from the official release asset digest and rerun all builds before merging."]
+  }, {
+    "matchUpdateTypes": ["major"],
+    "automerge": false,
+    "dependencyDashboardApproval": true
+  }]
+}

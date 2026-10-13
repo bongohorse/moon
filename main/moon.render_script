@@ -1,0 +1,23 @@
+local state=require 'modules.state'
+function init(self)
+    self.tile=render.predicate({'tile'})
+    self.gui=render.predicate({'gui'})
+end
+function update(self,dt)
+    local w,h=render.get_window_width(),render.get_window_height()
+    if w==0 or h==0 then return end
+    render.set_depth_mask(true)
+    render.clear({[graphics.BUFFER_TYPE_COLOR0_BIT]=vmath.vector4(0.045,0.052,0.13,1),[graphics.BUFFER_TYPE_DEPTH_BIT]=1,[graphics.BUFFER_TYPE_STENCIL_BIT]=0})
+    render.set_viewport(0,0,w,h)
+    render.set_view(vmath.matrix4())
+    local width=720*w/h
+    render.set_projection(vmath.matrix4_orthographic(state.camera_x,state.camera_x+width,state.camera_y,state.camera_y+720,-1,1))
+    render.disable_state(graphics.STATE_DEPTH_TEST)
+    render.enable_state(graphics.STATE_BLEND)
+    render.set_blend_func(graphics.BLEND_FACTOR_SRC_ALPHA,graphics.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+    render.draw(self.tile)
+    render.set_projection(vmath.matrix4_orthographic(0,w,0,h,-1,1))
+    render.enable_state(graphics.STATE_STENCIL_TEST)
+    render.draw(self.gui)
+    render.disable_state(graphics.STATE_STENCIL_TEST)
+end

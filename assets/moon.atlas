@@ -1,0 +1,7 @@
+images { image: "/assets/rover.png" }
+images { image: "/assets/wheel.png" }
+images { image: "/assets/ground.png" }
+images { image: "/assets/pixel.png" }
+margin: 2
+extrude_borders: 2
+images { image: "/assets/ridge.png" }

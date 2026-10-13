@@ -1,0 +1,116 @@
+local state=require 'modules.state'
+local config=require 'modules.config'
+local input=require 'modules.input'
+local navy=vmath.vector4(0.09,0.12,0.23,0.94)
+local cyan=vmath.vector4(0.4,0.95,0.92,1)
+local cream=vmath.vector4(1,0.9,0.72,1)
+local function box(w,h,color)
+    local n=gui.new_box_node(vmath.vector3(),vmath.vector3(w,h,0)); gui.set_color(n,color); return n
+end
+local function text(value,scale)
+    local n=gui.new_text_node(vmath.vector3(),value); gui.set_font(n,'default')
+    gui.set_color(n,cream); gui.set_scale(n,vmath.vector3(scale,scale,1)); return n
+end
+local function button(self,label,callback,w,h)
+    local b={node=box(w or 140,h or 55,navy),label=text(label,0.8),callback=callback,w=w or 140,h=h or 55}
+    self.buttons[#self.buttons+1]=b; return b
+end
+local function place(b,x,y,s,enabled)
+    gui.set_position(b.node,vmath.vector3(x,y,0)); gui.set_size(b.node,vmath.vector3(b.w*s,b.h*s,0))
+    gui.set_position(b.label,vmath.vector3(x,y,0)); gui.set_scale(b.label,vmath.vector3(0.8*s,0.8*s,1))
+    gui.set_enabled(b.node,enabled~=false); gui.set_enabled(b.label,enabled~=false)
+end
+local function pause()
+    if state.finished then return end
+    state.paused=not state.paused; input.clear(state.input)
+end
+function init(self)
+    msg.post('.','acquire_input_focus')
+    self.buttons={}; self.expanded=false
+    self.distance=text('MOON / MONDPOST',0.9)
+    self.status=text('',1)
+    self.gas=button(self,'GAS  /  D',nil,240,115)
+    self.brake=button(self,'BRAKE  /  A',nil,240,115)
+    self.pause=button(self,'PAUSE',pause)
+    self.restart=button(self,'RESTART',function() state.restart=true end)
+    self.dev=button(self,'TUNING +',function() self.expanded=not self.expanded end,160)
+    self.panel=box(1180,270,navy)
+    self.rows={}
+    for i,spec in ipairs(config.spec) do
+        local row={label=text('',0.75)}
+        row.minus=button(self,'-',function() config.adjust(state.pending,i,-1); state.dirty=true end,46,38)
+        row.plus=button(self,'+',function() config.adjust(state.pending,i,1); state.dirty=true end,46,38)
+        self.rows[i]=row
+    end
+    self.apply=button(self,'APPLY + RESTART',function() state.restart=true end,220,40)
+    self.defaults=button(self,'DEFAULTS',function() state.pending=config.defaults(); state.dirty=true end,160,40)
+    self.hint=text('Changes apply on restart',0.65)
+end
+function update(self,dt)
+    local w,h=window.get_size(); local safe=window.get_safe_area()
+    local scale=math.min(w/1280,h/720)
+    local left=math.max(24*scale,safe.inset_left+12*scale)
+    local right=w-math.max(24*scale,safe.inset_right+12*scale)
+    local top=h-math.max(32*scale,safe.inset_top+20*scale)
+    local bottom=math.max(24*scale,safe.inset_bottom+12*scale)
+    place(self.brake,left+120*scale,bottom+57*scale,scale)
+    place(self.gas,right-120*scale,bottom+57*scale,scale)
+    place(self.pause,right-70*scale,top,scale)
+    place(self.restart,right-220*scale,top,scale)
+    place(self.dev,right-385*scale,top,scale)
+    gui.set_position(self.distance,vmath.vector3(left+170*scale,top,0))
+    gui.set_scale(self.distance,vmath.vector3(0.8*scale,0.8*scale,1))
+    gui.set_text(self.distance,string.format('MOON   /   %03d m',state.distance))
+    gui.set_text(self.pause.label,state.paused and 'RESUME' or 'PAUSE')
+    local gas,brake=input.pedals(state.input)
+    gui.set_color(self.gas.node,gas and vmath.vector4(0.8,0.36,0.14,0.96) or navy)
+    gui.set_color(self.brake.node,brake and vmath.vector4(0.16,0.5,0.57,0.96) or navy)
+    gui.set_position(self.status,vmath.vector3(w/2,h/2,0))
+    gui.set_text(self.status,state.finished and 'TEST TRACK COMPLETE!  /  RESTART' or (state.paused and 'PAUSED  /  RESUME OR RESTART' or ''))
+    gui.set_scale(self.status,vmath.vector3(scale,scale,1))
+    gui.set_enabled(self.panel,self.expanded)
+    gui.set_position(self.panel,vmath.vector3(w/2,top-165*scale,0))
+    gui.set_size(self.panel,vmath.vector3(math.min(1180*scale,right-left),270*scale,0))
+    for i,row in ipairs(self.rows) do
+        local col=i>4 and 1 or 0; local r=(i-1)%4
+        local x=w/2+(col==0 and -295 or 285)*scale; local y=top-(85+r*42)*scale
+        gui.set_enabled(row.label,self.expanded)
+        gui.set_position(row.label,vmath.vector3(x-45*scale,y,0)); gui.set_scale(row.label,vmath.vector3(0.7*scale,0.7*scale,1))
+        gui.set_text(row.label,string.format('%s: %.1f',config.spec[i].label,state.pending[config.spec[i].key]))
+        place(row.minus,x+140*scale,y,scale,self.expanded); place(row.plus,x+195*scale,y,scale,self.expanded)
+    end
+    place(self.apply,w/2-120*scale,top-263*scale,scale,self.expanded)
+    place(self.defaults,w/2+95*scale,top-263*scale,scale,self.expanded)
+    gui.set_enabled(self.hint,self.expanded)
+    gui.set_position(self.hint,vmath.vector3(w/2,top-40*scale,0))
+    gui.set_scale(self.hint,vmath.vector3(0.65*scale,0.65*scale,1))
+    gui.set_text(self.hint,state.dirty and 'PENDING CHANGES - APPLY + RESTART REQUIRED' or 'All tuning values apply on restart')
+end
+local function pointer(self,id,a)
+    local x=a.x; local y=a.y
+    if a.pressed then
+        for _,b in ipairs(self.buttons) do
+            if b.callback and gui.is_enabled(b.node) and gui.pick_node(b.node,x,y) then b.callback(); return end
+        end
+    end
+    local pedal=nil
+    if not state.paused and not state.finished then
+        if gui.pick_node(self.gas.node,x,y) then pedal='gas'
+        elseif gui.pick_node(self.brake.node,x,y) then pedal='brake' end
+    end
+    input.touch(state.input,id,pedal,a.released)
+end
+function on_input(self,id,a)
+    if id==hash('gas') or id==hash('brake') then
+        if a.pressed and not state.paused and not state.finished then state.input.keys[id==hash('gas') and 'gas' or 'brake']=true end
+        if a.released then state.input.keys[id==hash('gas') and 'gas' or 'brake']=false end
+    elseif id==hash('pause') and a.pressed then pause()
+    elseif id==hash('restart') and a.pressed then state.restart=true
+    elseif id==hash('multitouch') then
+        for _,t in ipairs(a.touch or {}) do pointer(self,t.id,t) end
+    elseif id==hash('pointer') then
+        if a.pressed then self.mouse_down=true end
+        if self.mouse_down or a.released then pointer(self,'mouse',a) end
+        if a.released then self.mouse_down=false end
+    end
+end
