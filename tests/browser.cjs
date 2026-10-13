@@ -19,7 +19,7 @@ const {chromium}=require('playwright');
     const telemetry=()=>page.evaluate(()=>window.moonTelemetry);
     const wait=ms=>page.waitForTimeout(ms);
     const restart=async()=>{await page.keyboard.press('r',{delay:80});await wait(600)};
-    const click=async(x,y)=>{const b=await page.locator('canvas').boundingBox();await page.mouse.click(b.x+b.width*x,b.y+b.height*y)};
+    const click=async(x,y)=>{const b=await page.locator('canvas').boundingBox();await page.mouse.click(b.x+b.width*x,b.y+b.height*y,{delay:80});await wait(100)};
     await page.locator('canvas').click();
     await restart();
     const baseline=await telemetry(); assert(baseline.grounded); assert(backend);
@@ -40,7 +40,7 @@ const {chromium}=require('playwright');
     report.push('pause freezes bodies, resume and focus-loss clear input');
     for(let i=0;i<5;i++){await restart();assert((await telemetry()).distance===0)}
     report.push('five repeated restarts');
-    await click(0.674,0.045); // tuning header
+    await click(0.674,0.045); await page.screenshot({path:'test-results/tuning.png'}); // tuning header
     await click(0.422,0.163); // gravity +
     const pending=await telemetry();assert(pending.dirty);assert(pending.pendingGravity>pending.gravity);
     await click(0.406,0.41);await wait(500);
@@ -55,11 +55,19 @@ const {chromium}=require('playwright');
     const right={x:b.x+b.width*0.88,y:b.y+b.height*0.9,id:2};
     await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[left,right]});await wait(200);
     let t=await telemetry();assert(t.brake&&!t.gas,'two-finger braking');
-    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[right]});await wait(500);
+    await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[left]});await wait(500);
     t=await telemetry();assert(t.gas&&!t.brake,'release brake keeps gas');
     await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await wait(200);
     t=await telemetry();assert(!t.gas&&!t.brake);report.push('CDP emulated two-finger touch and independent releases');
     await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:false});
+    await restart();await page.keyboard.down('d');
+    await page.waitForFunction(()=>window.moonTelemetry.x>650&&!window.moonTelemetry.grounded,{},{timeout:8000});
+    const airborne=await telemetry();
+    await page.keyboard.down('a');await wait(140);
+    const noseDown=await telemetry();
+    assert(noseDown.brake&&!noseDown.gas);assert(noseDown.spin<airborne.spin,'air brake reduces nose-up spin');
+    await page.keyboard.up('a');await page.keyboard.up('d');
+    report.push('airborne brake changes physical angular velocity toward nose-down');
     await restart();await page.keyboard.down('d');
     const samples=[];
     for(let i=0;i<180;i++){await wait(100);t=await telemetry();samples.push(t);if(t.finished)break}

@@ -87,7 +87,7 @@ function update(self,dt)
     gui.set_text(self.hint,state.dirty and 'PENDING CHANGES - APPLY + RESTART REQUIRED' or 'All tuning values apply on restart')
 end
 local function pointer(self,id,a)
-    local x=a.screen_x or a.x; local y=a.screen_y or a.y
+    local x=a.x; local y=a.y
     if a.pressed then
         for _,b in ipairs(self.buttons) do
             if b.callback and gui.is_enabled(b.node) and gui.pick_node(b.node,x,y) then b.callback(); return end

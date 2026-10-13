@@ -73,8 +73,8 @@ function update(self,dt)
     end
     -- Test harness reads telemetry only; it cannot change simulation state.
     if html5 and html5.run then
-        html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s};',
-            state.distance,state.speed,tostring(state.grounded),state.suspension,tostring(state.paused),tostring(state.finished),state.restarts,state.air_frames,state.landings,p.x,p.y,tostring(select(1,input.pedals(state.input))),tostring(select(2,input.pedals(state.input))),state.settings.gravity,state.pending.gravity,tostring(state.dirty)))
+        html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s,spin:%.3f};',
+            state.distance,state.speed,tostring(state.grounded),state.suspension,tostring(state.paused),tostring(state.finished),state.restarts,state.air_frames,state.landings,p.x,p.y,tostring(select(1,input.pedals(state.input))),tostring(select(2,input.pedals(state.input))),state.settings.gravity,state.pending.gravity,tostring(state.dirty),go.get(msg.url(nil,self.vehicle.body,"co"),"angular_velocity").z))
     end
 end
 function final(self) window.set_listener(nil) end

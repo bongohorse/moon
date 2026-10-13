@@ -1,6 +1,6 @@
 # Validation record
 
-Phase-one validation is in progress. Final results will be recorded before the acceptance handoff.
+Phase-one local validation completed on 13 October 2026. GitHub checks and live deployment are recorded below once finalized.
 
 ## Current verified capabilities
 
@@ -27,3 +27,13 @@ Phase-one validation is in progress. Final results will be recorded before the a
 Headless browser checks use software rendering. They do not establish mobile GPU speed, native touch behavior, thermal stability or measured 60 FPS. No Android installation or iOS build/device test is claimed. Concept image fidelity remains pending because no source image files were accessible.
 
 HTML5 focus diagnosis: Defold 1.14.0's GLFW listens to canvas `blur`, not window blur or page visibility changes. The template now bridges browser lifecycle events to the canvas callback. Native window listener handling is unchanged. The browser test dispatches a real browser blur event through the template bridge; this is an automated lifecycle check, not a physical mobile app-switch test.
+
+## Browser functional checks
+
+Automated Chromium checks passed for keyboard acceleration and braking, both-pedal brake priority, suspension movement, jump/landing, full default track completion (342 m), pause/body freezing, explicit resume, HTML5 focus-loss bridge, five repeated restarts, tuning changes staged/applied by restart, and emulated two-finger pedals with independent releases. Screenshots cover 16:9, 4:3 tablet and wide-phone viewports. No Lua or JavaScript runtime errors were observed.
+
+`html5.scale_mode=stretch` resizes the canvas to the viewport; the custom projection preserves world proportions and exposes more terrain rather than stretching sprites. `high_dpi=0` avoids device-pixel-ratio supersampling. Large desktop viewports can still increase canvas dimensions; further native/mobile GPU profiling remains necessary.
+
+Touch diagnosis: GUI hit testing requires design-space `action.x/y`, even with disabled GUI adjustment. Screen-space coordinates caused missed buttons and were replaced. CDP `touchEnd` lists the released finger, not the remaining finger; the emulation test now uses the correct event semantics. Synthetic mouse events from touch do not replace the independent touch map.
+
+Licensing is open; reference fidelity and real-device acceptance remain pending in the owner acceptance issue.

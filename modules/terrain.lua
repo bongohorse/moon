@@ -12,6 +12,8 @@ function M.height(x)
     return M.points[#M.points][2]
 end
 function M.create()
+    local foundation=factory.create('#pixel',vmath.vector3(1800,20,-0.3),nil,nil,vmath.vector3(620,35,1))
+    go.set(msg.url(nil,foundation,'sprite'),'tint',vmath.vector4(101/255,84/255,123/255,1))
     for i=1,#M.points-1 do
         local a,b=M.points[i],M.points[i+1]
         local dx,dy=b[1]-a[1],b[2]-a[2]

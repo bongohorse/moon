@@ -25,7 +25,7 @@ package = com.bongohorse.moon
 version_code = 1
 [html5]
 htmlfile = /main/index.html
-scale_mode = fit
+scale_mode = stretch
 [collection]
 max_instances = 256
 [script]
