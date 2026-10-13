@@ -1,6 +1,8 @@
 [project]
 title = MOON
 version = 0.1.0
+[native_extension]
+app_manifest = /main/box2d3.appmanifest
 [bootstrap]
 main_collection = /main/main.collectionc
 render = /main/moon.renderc

@@ -1,12 +1,12 @@
 # MOON / Mondpost
 
-A small landscape lunar driving prototype using **Defold 1.14.0 stable**, **Lua**, integrated **legacy Box2D 2.2.1**, atlas sprites and Defold GUI. Android is primary; HTML5 provides an accessible test build. iOS input/safe areas are considered, with no iOS build in phase one.
+A small landscape lunar driving prototype using **Defold 1.14.0 stable**, **Lua**, integrated **Box2D 3.1.0**, atlas sprites and Defold GUI. Android is primary; HTML5 provides an accessible test build. iOS input/safe areas are considered, with no iOS build in phase one.
 
 **Play:** https://bongohorse.github.io/moon/
 
 ## Run and develop
 
-Open `game.project` in the matching stable Defold editor and choose Project → Build. Or use Java 25, Node 24.19.0 and Python 3 for reproducible command-line checks:
+Open `game.project` in the matching stable Defold editor and choose Project → Build. Or use Java 25, Node 24 LTS (CI pins 24.21.0) and Python 3 for reproducible command-line checks:
 
 ```sh
 npm ci
@@ -17,7 +17,7 @@ tools/build.sh wasm-web debug
 npm run test:browser
 ```
 
-The browser test installs Chromium separately with `npx playwright install chromium`; a system Chromium can be selected with `CHROMIUM_PATH=/usr/bin/chromium`. For manual HTML5 testing:
+The browser test installs Chromium separately with `npx playwright install chromium`; a system Chromium can be selected with `CHROMIUM_PATH=/usr/bin/chromium`, but the managed Headless Shell matches CI and is recommended for acceptance checks. For manual HTML5 testing:
 
 ```sh
 python3 -m http.server 8000 --directory dist/wasm-web/MOON
@@ -43,7 +43,7 @@ tools/build.sh arm64-android debug
 tools/build.sh x86_64-linux debug
 ```
 
-Outputs are in `dist/<platform>/MOON/`. Bob is downloaded from the official release and checked against the pinned SHA-256. No local Android SDK is required for the tested Bob debug APK build. This phase uses a generated **debug** key only, never store/release signing. Keep keys/password files ignored.
+Outputs are in `dist/<platform>/MOON/`. Bob is downloaded from the official release and checked against the pinned SHA-256. The explicit Box2D 3 app manifest requires Defold’s official native build service (`build.defold.com`). On cloud machines with `HTTPS_PROXY`, the build script uses a loopback bridge because Bob’s native client ignores that variable; upstream TLS verification remains enabled. No local Android SDK is required for the tested Bob debug APK build. This phase uses a generated **debug** key only, never store/release signing. Keep keys/password files ignored.
 
 [Build workflow and downloadable Android APK](https://github.com/bongohorse/moon/actions/workflows/build.yml): artifacts are named `moon-arm64-android` and retained 14 days. The zip contains `MOON.apk`; sideload only on a suitable ARM64 Android test device. CI validates Lua logic and Renovate, builds release HTML5/debug Android, and runs a debug HTML5 physics smoke test before Pages deployment. Action SHAs, Node and Java versions are pinned. No native extensions or external asset CDN is used.
 

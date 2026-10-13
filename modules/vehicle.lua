@@ -2,22 +2,23 @@ local M={}
 local function co(id) return msg.url(nil,id,'co') end
 function M.create(settings)
     local p=vmath.vector3(180,294,0)
-    local v={body=factory.create('#rover',p),wheels={},joints={'rear','front'},enabled=true}
+    local v={body=factory.create('#rover',p),wheels={},joints={},enabled=true}
     for i,x in ipairs({-57,57}) do
         local w=factory.create('#wheel',p+vmath.vector3(x,-46,0.2)); v.wheels[i]=w
         local body=b2d.get_body(co(w))
-        b2d.fixture.set_friction(body,1,settings.friction)
-        physics.create_joint(physics.JOINT_TYPE_WHEEL,co(v.body),v.joints[i],
-            vmath.vector3(x,-46,0),co(w),vmath.vector3(),{
-            local_axis_a=vmath.vector3(0,1,0),enable_motor=true,
-            motor_speed=0,max_motor_torque=settings.brake,
+        b2d.shape.set_friction(b2d.body.get_shapes(body)[1].shape_id,settings.friction)
+        v.joints[i]=b2d.joint.create_wheel(b2d.get_body(co(v.body)),body,{
+            local_anchor_a=vmath.vector3(x,-46,0),local_anchor_b=vmath.vector3(),
+            local_axis_a=vmath.vector3(0,1,0),enable_spring=true,enable_motor=true,
+            motor_speed=0,max_motor_torque=settings.brake/0.01,
             frequency=settings.spring,damping=settings.damping})
+        assert(b2d.joint.is_spring_enabled(v.joints[i]),'Wheel suspension must be enabled')
     end
     physics.set_gravity(vmath.vector3(0,-settings.gravity,0))
     return v
 end
 function M.destroy(v)
-    for _,j in ipairs(v.joints) do physics.destroy_joint(co(v.body),j) end
+    for _,j in ipairs(v.joints) do b2d.joint.destroy(j) end
     go.delete(v.body); for _,w in ipairs(v.wheels) do go.delete(w) end
 end
 function M.enable(v,enabled)
@@ -28,10 +29,10 @@ end
 function M.step(v,s,gas,brake,dt)
     local cfg=s.settings
     for _,j in ipairs(v.joints) do
-        physics.set_joint_properties(co(v.body),j,{enable_motor=gas or brake,
-            motor_speed=gas and -cfg.speed or 0,
-            max_motor_torque=(brake and cfg.brake or cfg.torque)/0.01,
-            local_axis_a=vmath.vector3(0,1,0),frequency=cfg.spring,damping=cfg.damping})
+        b2d.joint.enable_motor(j,gas or brake)
+        b2d.joint.set_motor_speed(j,gas and -cfg.speed or 0)
+        -- The supported low-level API scales project torque by physics.scale.
+        b2d.joint.set_max_motor_torque(j,(brake and cfg.brake or cfg.torque)/0.01)
     end
     local grounded=false
     for _,w in ipairs(v.wheels) do

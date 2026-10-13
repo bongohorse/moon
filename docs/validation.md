@@ -2,7 +2,7 @@
 
 Phase-one local validation completed on 13 October 2026. GitHub checks and live deployment are recorded below once finalized.
 
-## Current verified capabilities
+## Initial phase-one capabilities (before backend migration)
 
 - Official stable Bob 1.14.0 toolchain with release asset checksum match and Java 25.
 - HTML5 debug and release bundles; actual startup in Chromium with Box2D 2.2.1.
@@ -37,3 +37,13 @@ Automated Chromium checks passed for keyboard acceleration and braking, both-ped
 Touch diagnosis: GUI hit testing requires design-space `action.x/y`, even with disabled GUI adjustment. Screen-space coordinates caused missed buttons and were replaced. CDP `touchEnd` lists the released finger, not the remaining finger; the emulation test now uses the correct event semantics. Synthetic mouse events from touch do not replace the independent touch map.
 
 Licensing is open; reference fidelity and real-device acceptance remain pending in the owner acceptance issue.
+
+## Box2D 3 migration
+
+The owner requested an upgrade after phase-one completion and selected Defold's supported integrated Box2D 3.1.0 when the upstream/engine version distinction was explained. Defold 1.14.0 does not integrate upstream 3.1.1. The new app manifest has been accepted by the official native build service and produced a custom HTML5 engine.
+
+The migration changes tires to the v3 shape friction API and creates explicitly spring-enabled wheel joints through documented b2d.joint handles. Defold's high-level v3 wheel creation disables the spring; using it unchanged would not satisfy the suspension requirement. Dedicated motor setters retain spring settings. The existing browser regression now requires the v3.1.0 engine log; full driving/lifecycle/touch checks and Android/production builds gate merging this change.
+
+Cloud build diagnosis: Bob's Extender client ignores HTTPS_PROXY and failed direct network access. The loopback bridge now uses the platform HTTPS proxy and verifies TLS to the fixed official build service. No verification was disabled. Empty outdated example-manifest fields rejected by the service were removed.
+
+Migration validation: all four checks passed on candidate 1cbf321 in GitHub run 38427440395. Local matching Playwright Headless Shell 156 then passed the complete regression: 342 m finish, 254 airborne fixed steps and six landings, moving suspension, air braking, repeated restarts, focus/pause/resume, tuning and simultaneous touch. The original local fixed-wall-time acceleration check was unstable with system Chromium and a full Chrome test binary under software rendering. Acceleration/braking now wait with bounded timeouts for the same motion thresholds; no thresholds or feature assertions were removed. Use Playwright's managed headless browser for matching local/CI results. Mobile performance and real-device feel remain open.
