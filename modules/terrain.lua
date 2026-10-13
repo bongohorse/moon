@@ -12,19 +12,17 @@ function M.height(x)
     return M.points[#M.points][2]
 end
 function M.create()
-    local foundation=factory.create('#pixel',vmath.vector3(1800,20,-0.3),nil,nil,vmath.vector3(620,35,1))
-    go.set(msg.url(nil,foundation,'sprite'),'tint',vmath.vector4(101/255,84/255,123/255,1))
     for i=1,#M.points-1 do
         local a,b=M.points[i],M.points[i+1]
         local dx,dy=b[1]-a[1],b[2]-a[2]
         local angle=math.atan2(dy,dx)
-        -- Thick slabs overlap below their top edges; no visual-only ground.
+        -- Preserve physical slab overlap; the separate render mesh shares these top edges.
         local pos=vmath.vector3((a[1]+b[1])/2+math.sin(angle)*16,
             (a[2]+b[2])/2-math.cos(angle)*16,-0.2)
         local id=factory.create('#ground',pos,vmath.quat_rotation_z(angle))
         local length=math.sqrt(dx*dx+dy*dy)+1
         physics.set_shape(msg.url(nil,id,'co'),'shape',{type=physics.SHAPE_TYPE_BOX,dimensions=vmath.vector3(length,32,10)})
-        go.set(msg.url(nil,id,'sprite'),'scale',vmath.vector3(length/32,10,1))
+        msg.post(msg.url(nil,id,'sprite'),'disable')
     end
 end
 return M

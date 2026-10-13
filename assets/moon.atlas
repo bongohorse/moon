@@ -5,3 +5,11 @@ images { image: "/assets/pixel.png" }
 margin: 2
 extrude_borders: 2
 images { image: "/assets/ridge.png" }
+images { image: "/assets/spring.png" }
+images { image: "/assets/moon.png" }
+images { image: "/assets/ridge-far.png" }
+images { image: "/assets/ridge-near.png" }
+images { image: "/assets/rock.png" }
+images { image: "/assets/pedal-gas.png" }
+images { image: "/assets/pedal-brake.png" }
+images { image: "/assets/ui-panel.png" }

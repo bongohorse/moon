@@ -1,18 +1,18 @@
 local state=require 'modules.state'
 local config=require 'modules.config'
 local input=require 'modules.input'
-local navy=vmath.vector4(0.09,0.12,0.23,0.94)
+local navy=vmath.vector4(0.063,0.082,0.184,1)
 local cyan=vmath.vector4(0.4,0.95,0.92,1)
 local cream=vmath.vector4(1,0.9,0.72,1)
 local function box(w,h,color)
-    local n=gui.new_box_node(vmath.vector3(),vmath.vector3(w,h,0)); gui.set_color(n,color); return n
+    local n=gui.new_box_node(vmath.vector3(),vmath.vector3(w,h,0)); gui.set_color(n,color); gui.set_texture(n,'art'); gui.play_flipbook(n,'ui-panel'); gui.set_slice9(n,vmath.vector4(12,12,12,12)); return n
 end
 local function text(value,scale)
     local n=gui.new_text_node(vmath.vector3(),value); gui.set_font(n,'default')
     gui.set_color(n,cream); gui.set_scale(n,vmath.vector3(scale,scale,1)); return n
 end
 local function button(self,label,callback,w,h)
-    local b={node=box(w or 140,h or 55,navy),label=text(label,0.8),callback=callback,w=w or 140,h=h or 55}
+    local b={node=box(w or 140,h or 55,vmath.vector4(1,1,1,1)),label=text(label,0.8),callback=callback,w=w or 140,h=h or 55}
     self.buttons[#self.buttons+1]=b; return b
 end
 local function place(b,x,y,s,enabled)
@@ -27,14 +27,18 @@ end
 function init(self)
     msg.post('.','acquire_input_focus')
     self.buttons={}; self.expanded=false
-    self.distance=text('MOON / MONDPOST',0.9)
+    self.header=box(370,55,vmath.vector4(1,1,1,1))
+    self.distance=text('MONDPOST',0.9)
     self.status=text('',1)
-    self.gas=button(self,'GAS  /  D',nil,240,115)
-    self.brake=button(self,'BRAKE  /  A',nil,240,115)
+    self.gas=button(self,'GAS',nil,240,115)
+    self.brake=button(self,'BRAKE',nil,240,115)
+    gui.play_flipbook(self.gas.node,'pedal-gas'); gui.play_flipbook(self.brake.node,'pedal-brake')
+    gui.set_slice9(self.gas.node,vmath.vector4()); gui.set_slice9(self.brake.node,vmath.vector4())
+    gui.set_color(self.gas.label,navy); gui.set_color(self.brake.label,navy)
     self.pause=button(self,'PAUSE',pause)
     self.restart=button(self,'RESTART',function() state.restart=true end)
     self.dev=button(self,'TUNING +',function() self.expanded=not self.expanded end,160)
-    self.panel=box(1180,270,navy)
+    self.panel=box(1180,270,vmath.vector4(1,1,1,0.96))
     self.rows={}
     for i,spec in ipairs(config.spec) do
         local row={label=text('',0.75)}
@@ -58,29 +62,35 @@ function update(self,dt)
     place(self.pause,right-70*scale,top,scale)
     place(self.restart,right-220*scale,top,scale)
     place(self.dev,right-385*scale,top,scale)
+    gui.set_position(self.header,vmath.vector3(left+185*scale,top,0)); gui.set_size(self.header,vmath.vector3(370*scale,55*scale,0))
     gui.set_position(self.distance,vmath.vector3(left+170*scale,top,0))
     gui.set_scale(self.distance,vmath.vector3(0.8*scale,0.8*scale,1))
-    gui.set_text(self.distance,string.format('MOON   /   %03d m',state.distance))
+    gui.set_text(self.distance,string.format('MONDPOST  /  %03d m',state.distance))
     gui.set_text(self.pause.label,state.paused and 'RESUME' or 'PAUSE')
     local gas,brake=input.pedals(state.input)
-    gui.set_color(self.gas.node,gas and vmath.vector4(0.8,0.36,0.14,0.96) or navy)
-    gui.set_color(self.brake.node,brake and vmath.vector4(0.16,0.5,0.57,0.96) or navy)
-    gui.set_position(self.status,vmath.vector3(w/2,h/2,0))
+    gui.set_color(self.gas.node,gas and vmath.vector4(0.82,0.76,0.68,1) or vmath.vector4(1,1,1,1))
+    gui.set_color(self.brake.node,brake and vmath.vector4(0.7,0.78,0.9,1) or vmath.vector4(1,1,1,1))
+    for _,pedal in ipairs({self.gas,self.brake}) do
+        local pos=gui.get_position(pedal.label); pos.y=pos.y-14*scale
+        gui.set_position(pedal.label,pos); gui.set_scale(pedal.label,vmath.vector3(1.3*scale,1.3*scale,1))
+    end
+    gui.set_position(self.status,vmath.vector3(w/2,top-83*scale,0))
     gui.set_text(self.status,state.finished and 'TEST TRACK COMPLETE!  /  RESTART' or (state.paused and 'PAUSED  /  RESUME OR RESTART' or ''))
-    gui.set_scale(self.status,vmath.vector3(scale,scale,1))
+    gui.set_scale(self.status,vmath.vector3(0.85*scale,0.85*scale,1))
+    gui.set_enabled(self.status,not self.expanded)
     gui.set_enabled(self.panel,self.expanded)
-    gui.set_position(self.panel,vmath.vector3(w/2,top-165*scale,0))
-    gui.set_size(self.panel,vmath.vector3(math.min(1180*scale,right-left),270*scale,0))
+    gui.set_position(self.panel,vmath.vector3(w/2,top-148*scale,0))
+    gui.set_size(self.panel,vmath.vector3(math.min(1180*scale,right-left),242*scale,0))
     for i,row in ipairs(self.rows) do
         local col=i>4 and 1 or 0; local r=(i-1)%4
-        local x=w/2+(col==0 and -295 or 285)*scale; local y=top-(85+r*42)*scale
+        local x=w/2+(col==0 and -295 or 285)*scale; local y=top-(75+r*34)*scale
         gui.set_enabled(row.label,self.expanded)
         gui.set_position(row.label,vmath.vector3(x-45*scale,y,0)); gui.set_scale(row.label,vmath.vector3(0.7*scale,0.7*scale,1))
         gui.set_text(row.label,string.format('%s: %.1f',config.spec[i].label,state.pending[config.spec[i].key]))
         place(row.minus,x+140*scale,y,scale,self.expanded); place(row.plus,x+195*scale,y,scale,self.expanded)
     end
-    place(self.apply,w/2-120*scale,top-263*scale,scale,self.expanded)
-    place(self.defaults,w/2+95*scale,top-263*scale,scale,self.expanded)
+    place(self.apply,w/2-120*scale,top-234*scale,scale,self.expanded)
+    place(self.defaults,w/2+95*scale,top-234*scale,scale,self.expanded)
     gui.set_enabled(self.hint,self.expanded)
     gui.set_position(self.hint,vmath.vector3(w/2,top-40*scale,0))
     gui.set_scale(self.hint,vmath.vector3(0.65*scale,0.65*scale,1))

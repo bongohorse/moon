@@ -7,7 +7,7 @@ function update(self,dt)
     local w,h=render.get_window_width(),render.get_window_height()
     if w==0 or h==0 then return end
     render.set_depth_mask(true)
-    render.clear({[graphics.BUFFER_TYPE_COLOR0_BIT]=vmath.vector4(0.045,0.052,0.13,1),[graphics.BUFFER_TYPE_DEPTH_BIT]=1,[graphics.BUFFER_TYPE_STENCIL_BIT]=0})
+    render.clear({[graphics.BUFFER_TYPE_COLOR0_BIT]=vmath.vector4(16/255,21/255,47/255,1),[graphics.BUFFER_TYPE_DEPTH_BIT]=1,[graphics.BUFFER_TYPE_STENCIL_BIT]=0})
     render.set_viewport(0,0,w,h)
     render.set_view(vmath.matrix4())
     local width=720*w/h
