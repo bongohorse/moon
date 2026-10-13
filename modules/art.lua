@@ -36,7 +36,7 @@ function M.create()
         local scale=.45+(i%4)*.18
         sprite_at('rock',vmath.vector3(x,y,0),scale,scale,-.05,vmath.vector4(1,1,1,.8))
     end
-    for i=1,2 do a.springs[i]=sprite_at('spring',vmath.vector3(),1,1,.05) end
+    for i=1,2 do a.springs[i]=factory.create('#spring',vmath.vector3(0,0,.15)) end
     return a
 end
 function M.update(a,state,vehicle)
@@ -52,7 +52,7 @@ function M.update(a,state,vehicle)
     local p=go.get_position(vehicle.body)
     for i,w in ipairs(vehicle.wheels) do
         local anchor=p+vmath.rotate(go.get_rotation(vehicle.body),vmath.vector3(i==1 and -34 or 34,-8,0))
-        local wp=go.get_position(w);local delta=anchor-wp;local middle=(anchor+wp)*.5;middle.z=.05
+        local wp=go.get_position(w);local delta=anchor-wp;local middle=(anchor+wp)*.5;middle.z=.15
         go.set_position(middle,a.springs[i]);go.set_rotation(vmath.quat_rotation_z(math.atan2(delta.y,delta.x)-math.pi/2),a.springs[i])
         go.set_scale(vmath.vector3(1,vmath.length(delta)/64,1),a.springs[i])
     end

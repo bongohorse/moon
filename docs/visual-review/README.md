@@ -16,8 +16,8 @@ All paired images use the flat start, zero distance, settled rover, paused state
 ## Inspection evidence
 
 - [Compressed suspension](after/compression.png), [extended suspension](after/extension.png), [jump](after/jump.png), [touchdown](after/landing.png).
-- [Tablet tuning](after/tuning-1024.png), [wide tuning](after/tuning-1920.png), [pressed brake](after/brake-pressed.png). Gas is visibly darkened in motion captures.
-- [Recorded physical telemetry](after/observations.json) identifies observed suspension extrema and capture events. This is the largest observed compression during the captured default-track pass, not a forced mechanical travel limit; no joint stops or physics settings were added.
+- [Tablet tuning](after/tuning-1024.png), [wide tuning](after/tuning-1920.png), [pressed brake](after/brake-pressed.png). [Pressed gas](after/gas-pressed.png) shows the separate orange plate feedback.
+- [Recorded physical telemetry](after/observations.json) identifies observed suspension extrema and capture events. Movement captures pause through the normal key before screenshot readback; recorded telemetry describes that frozen pose. This is the most compressed frozen pose captured during this default-track pass, not a forced mechanical travel limit; no joint stops or physics settings were added.
 - `node tests/visual-review.cjs after` reproduces the capture sequence after a local debug HTML5 build. It drives through normal keys only and checks for runtime errors.
 
 The visible wheel centers rotate with their real bodies; tire radius and sprite pivot remain unchanged. Cosmetic diagonal spring endpoints follow chassis-local mounts and actual wheel centers on every render. Closed terrain triangles share the original surface vertices, and overlapping bright edge strokes avoid cracks. Rocks are beneath the driving edge. The ground texture has no baked segment border. The design stays within the original 128-sprite budget, including disabled collision-slab sprites and transient restart bodies.

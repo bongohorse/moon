@@ -43,13 +43,13 @@ const {chromium}=require('playwright');
     for(let i=0;i<5;i++){await restart();assert((await telemetry()).distance===0)}
     report.push('five repeated restarts');
     await click(0.674,0.045); await page.screenshot({path:'test-results/tuning.png'}); // tuning header
-    await click(0.422,0.163); // gravity +
+    await click(0.422,0.149); // gravity +
     const pending=await telemetry();assert(pending.dirty);assert(pending.pendingGravity>pending.gravity);
-    await click(0.406,0.41);await wait(500);
+    await click(0.406,0.37);await wait(500);
     const applied=await telemetry();assert(!applied.dirty);assert(applied.gravity===pending.pendingGravity);
     await click(0.674,0.045);report.push('collapsed tuning, bounded staged settings and apply/restart');
     // Reset defaults through the panel before driving the default configuration.
-    await click(0.674,0.045);await click(0.574,0.41);await click(0.406,0.41);await wait(500);await click(0.674,0.045);
+    await click(0.674,0.045);await click(0.574,0.37);await click(0.406,0.37);await wait(500);await click(0.674,0.045);
     const cdp=await page.context().newCDPSession(page);
     await cdp.send('Emulation.setTouchEmulationEnabled',{enabled:true});
     const b=await page.locator('canvas').boundingBox();

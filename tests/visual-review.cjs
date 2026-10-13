@@ -20,15 +20,28 @@ const fs=require('node:fs');const path=require('node:path');const assert=require
       if(mode==='after'){await tuning();await snap('tuning-'+size.width);await tuning()}
     }
     await page.setViewportSize({width:1280,height:720});await reset();await page.keyboard.press('Space',{delay:80});await tuning();await snap('tuning');await tuning();
-    if(mode==='after') {
+    if(mode==='after'&&!process.argv.includes('--layout-only')) {
       await reset();await page.keyboard.down('a');await page.waitForTimeout(200);await snap('brake-pressed');await page.keyboard.up('a');
-      await page.keyboard.down('d');let maximum=-Infinity,minimum=Infinity;let airborne=false,landed=false;const events={};
+      await page.keyboard.down('d');await page.waitForTimeout(200);await snap('gas-pressed');let maximum=-Infinity,minimum=Infinity,targetMaximum=-Infinity,targetMinimum=Infinity;
+      let airborne=false,landed=false;const events={};
+      // Pause with the normal key before capture: software screenshot readback can
+      // take multiple live frames. Record the frozen pose, not an earlier sample.
+      const capture=async(name,accept=()=>true)=>{
+        await page.keyboard.up('d');await page.keyboard.press('Space',{delay:80});await page.waitForTimeout(150);
+        const pose=await page.evaluate(()=>window.moonTelemetry);assert(pose.paused);
+        if(accept(pose)){await snap(name);events[name]=pose}
+        await page.keyboard.press('Space',{delay:80});await page.keyboard.down('d');return pose;
+      };
       for(let i=0;i<180;i++) {
-        await page.waitForTimeout(80);const t=await page.evaluate(()=>window.moonTelemetry);
-        if(t.suspension>maximum){maximum=t.suspension;await snap('compression');events.compression=t}
-        if(t.suspension<minimum){minimum=t.suspension;await snap('extension');events.extension=t}
-        if(!airborne&&t.x>650&&!t.grounded){await snap('jump');airborne=true;events.jump=t}
-        if(airborne&&!landed&&t.grounded&&t.suspension>0){await snap('landing');landed=true;events.landing=t}
+        await page.waitForTimeout(80);const t=await page.evaluate(()=>window.moonTelemetry);if(t.finished)break;
+        if(t.suspension>targetMaximum+.5){targetMaximum=t.suspension;await capture('compression',pose=>{
+          if(pose.suspension<=maximum)return false;maximum=pose.suspension;return true;
+        })}
+        if(t.suspension<targetMinimum-.5){targetMinimum=t.suspension;await capture('extension',pose=>{
+          if(pose.suspension>=minimum)return false;minimum=pose.suspension;return true;
+        })}
+        if(!airborne&&t.x>650&&t.y>380&&!t.grounded){const pose=await capture('jump',p=>!p.grounded);airborne=!pose.grounded}
+        if(airborne&&!landed&&t.grounded&&t.suspension>0){const pose=await capture('landing',p=>p.grounded);landed=pose.grounded}
         if(t.finished)break;
       }
       await page.keyboard.up('d');assert(airborne&&landed,'jump and compressed touchdown captured');

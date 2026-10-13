@@ -42,8 +42,8 @@ function init(self)
     self.rows={}
     for i,spec in ipairs(config.spec) do
         local row={label=text('',0.75)}
-        row.minus=button(self,'-',function() config.adjust(state.pending,i,-1); state.dirty=true end,46,38)
-        row.plus=button(self,'+',function() config.adjust(state.pending,i,1); state.dirty=true end,46,38)
+        row.minus=button(self,'-',function() config.adjust(state.pending,i,-1); state.dirty=true end,46,30)
+        row.plus=button(self,'+',function() config.adjust(state.pending,i,1); state.dirty=true end,46,30)
         self.rows[i]=row
     end
     self.apply=button(self,'APPLY + RESTART',function() state.restart=true end,220,40)
