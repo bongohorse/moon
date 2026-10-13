@@ -1,0 +1,12 @@
+/build/
+/dist/
+/.internal/
+/.cache/
+/node_modules/
+/test-results/
+*.apk
+*.aab
+*.keystore
+*.jks
+.DS_Store
+/debug.keystore*

@@ -1,0 +1,7 @@
+{
+  "name": "moon-development-checks",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {"test": "fengari tests/logic.lua", "test:browser": "node tests/browser.cjs", "validate:renovate": "renovate-config-validator renovate.json"},
+  "devDependencies": {"fengari-node-cli": "0.1.0", "playwright": "1.64.0", "renovate": "44.155.4"}
+}

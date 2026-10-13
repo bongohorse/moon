@@ -1,0 +1,16 @@
+type: COLLISION_OBJECT_TYPE_STATIC
+mass: 0
+friction: 1.5
+restitution: 0.02
+group: "ground"
+mask: "wheel"
+linear_damping: 0.02
+angular_damping: 0.1
+embedded_collision_shape {
+ shapes { id: "shape" shape_type: TYPE_BOX position { x: 0 y: 0 z: 0 } rotation { x: 0 y: 0 z: 0 w: 1 } index: 0 count: 3 }
+ data: 16 
+data: 16 
+data: 10 
+
+}
+mask: "rover"

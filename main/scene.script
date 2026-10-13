@@ -1,0 +1,80 @@
+local state=require 'modules.state'
+local vehicle=require 'modules.vehicle'
+local terrain=require 'modules.terrain'
+local input=require 'modules.input'
+local camera=require 'modules.camera'
+local config=require 'modules.config'
+local function decor(pos,size,color)
+    local id=factory.create('#pixel',pos,nil,nil,vmath.vector3(size.x/8,size.y/8,1))
+    go.set(msg.url(nil,id,'sprite'),'tint',color)
+    return id
+end
+local function restart(self)
+    if self.vehicle then vehicle.destroy(self.vehicle) end
+    state.settings=config.copy(state.pending); state.dirty=false
+    self.vehicle=vehicle.create(state.settings)
+    state.paused=false; state.finished=false; state.restart=false
+    state.distance=0; state.restarts=state.restarts+1; input.clear(state.input)
+    camera.update(state,go.get_position(self.vehicle.body),0,true)
+end
+function init(self)
+    terrain.create(); restart(self)
+    self.stars={}
+    for i=1,30 do
+        local x=(i*173)%1500; local y=450+(i*79)%240
+        self.stars[i]={id=decor(vmath.vector3(x,y,-0.8),vmath.vector3(2,2,1),vmath.vector4(0.55,0.6,0.8,1)),x=x,y=y}
+    end
+    self.ridges={}
+    for i=1,9 do
+        local x=(i-1)*240
+        local id=decor(vmath.vector3(x,320,-0.6),vmath.vector3(300,130,1),vmath.vector4(0.65,0.65,0.8,1))
+        sprite.play_flipbook(msg.url(nil,id,'sprite'),'ridge')
+        go.set_scale(vmath.vector3(300/256,130/128,1),id)
+        self.ridges[i]={id=id,x=x}
+    end
+    decor(vmath.vector3(terrain.finish,310,0.3),vmath.vector3(5,160,1),vmath.vector4(0.4,1,0.95,1))
+    decor(vmath.vector3(terrain.finish+40,380,0.3),vmath.vector3(85,35,1),vmath.vector4(1,0.65,0.3,1))
+    self.arms={}
+    for i=1,2 do self.arms[i]=decor(vmath.vector3(),vmath.vector3(6,40,1),vmath.vector4(0.67,0.92,0.91,1)) end
+    window.set_listener(function(_,event)
+        if event==window.WINDOW_EVENT_FOCUS_LOST or event==window.WINDOW_EVENT_ICONIFIED then
+            state.paused=true; input.clear(state.input)
+            vehicle.enable(self.vehicle,false)
+        end
+    end)
+end
+function fixed_update(self,dt)
+    if state.restart then restart(self) end
+    vehicle.enable(self.vehicle,not state.paused and not state.finished)
+    if state.paused or state.finished then return end
+    local gas,brake=input.pedals(state.input)
+    vehicle.step(self.vehicle,state,gas,brake,dt)
+    local p=go.get_position(self.vehicle.body)
+    state.distance=math.max(0,math.floor((p.x-180)/10))
+    if p.x>=terrain.finish then state.finished=true; input.clear(state.input) end
+    if p.y<60 then state.paused=true; input.clear(state.input) end
+end
+function update(self,dt)
+    local p=go.get_position(self.vehicle.body)
+    camera.update(state,p,dt,false)
+    for _,star in ipairs(self.stars) do
+        go.set_position(vmath.vector3(state.camera_x+((star.x-state.camera_x*0.08)%1900)-100,star.y+state.camera_y*0.8,-0.8),star.id)
+    end
+    for _,r in ipairs(self.ridges) do
+        go.set_position(vmath.vector3(state.camera_x+((r.x-state.camera_x*0.25)%2400)-300,320+state.camera_y*0.7,-0.6),r.id)
+    end
+    for i,w in ipairs(self.vehicle.wheels) do
+        local anchor=p+vmath.rotate(go.get_rotation(self.vehicle.body),vmath.vector3(i==1 and -57 or 57,-10,0))
+        local wp=go.get_position(w); local delta=anchor-wp
+        local middle=(anchor+wp)*0.5; middle.z=0.15
+        go.set_position(middle,self.arms[i])
+        go.set_rotation(vmath.quat_rotation_z(math.atan2(delta.y,delta.x)-math.pi/2),self.arms[i])
+        go.set_scale(vmath.vector3(0.75,vmath.length(delta)/8,1),self.arms[i])
+    end
+    -- Test harness reads telemetry only; it cannot change simulation state.
+    if html5 and html5.run then
+        html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s};',
+            state.distance,state.speed,tostring(state.grounded),state.suspension,tostring(state.paused),tostring(state.finished),state.restarts,state.air_frames,state.landings,p.x,p.y,tostring(select(1,input.pedals(state.input))),tostring(select(2,input.pedals(state.input))),state.settings.gravity,state.pending.gravity,tostring(state.dirty)))
+    end
+end
+function final(self) window.set_listener(nil) end

@@ -1,0 +1,32 @@
+[project]
+title = MOON
+version = 0.1.0
+[bootstrap]
+main_collection = /main/main.collectionc
+render = /main/moon.renderc
+[display]
+width = 1280
+height = 720
+high_dpi = 0
+vsync = 1
+[engine]
+fixed_update_frequency = 60
+max_time_step = 0.05
+[physics]
+type = 2D
+scale = 0.01
+gravity_y = -480
+use_fixed_timestep = 1
+max_collision_object_count = 128
+[input]
+game_binding = /main/input.input_bindingc
+[android]
+package = com.bongohorse.moon
+version_code = 1
+[html5]
+htmlfile = /builtins/manifests/web/engine_template.html
+scale_mode = fit
+[collection]
+max_instances = 256
+[script]
+shared_state = 1
