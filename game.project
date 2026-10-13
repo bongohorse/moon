@@ -24,7 +24,7 @@ game_binding = /main/input.input_bindingc
 package = com.bongohorse.moon
 version_code = 1
 [html5]
-htmlfile = /builtins/manifests/web/engine_template.html
+htmlfile = /main/index.html
 scale_mode = fit
 [collection]
 max_instances = 256

@@ -25,3 +25,5 @@ Phase-one validation is in progress. Final results will be recorded before the a
 ## Limits
 
 Headless browser checks use software rendering. They do not establish mobile GPU speed, native touch behavior, thermal stability or measured 60 FPS. No Android installation or iOS build/device test is claimed. Concept image fidelity remains pending because no source image files were accessible.
+
+HTML5 focus diagnosis: Defold 1.14.0's GLFW listens to canvas `blur`, not window blur or page visibility changes. The template now bridges browser lifecycle events to the canvas callback. Native window listener handling is unchanged. The browser test dispatches a real browser blur event through the template bridge; this is an automated lifecycle check, not a physical mobile app-switch test.
