@@ -1,0 +1,312 @@
+{
+  "format": "PNG RGBA",
+  "origin": "Generated with OpenAI Imagegen for Mondpost on 2026-10-13",
+  "assets": [
+    {
+      "path": "vehicle/rover-chassis.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 567597,
+      "sha256": "efdf04201b165a7c7d1c47eec320de69270c97cfa1c135555b623f00f6cff78f",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        41,
+        32,
+        1750,
+        839
+      ]
+    },
+    {
+      "path": "vehicle/rover-wheel.png",
+      "width": 1292,
+      "height": 1217,
+      "bytes": 1139436,
+      "sha256": "11ff870d989ee7e0a9b1d37de283c1c7018fb8c988d0f7cb5dd9f81dae2cd410",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        22,
+        1254,
+        1195
+      ]
+    },
+    {
+      "path": "vehicle/rover-suspension.png",
+      "width": 1302,
+      "height": 1208,
+      "bytes": 693819,
+      "sha256": "df01b535e83ab4c37f6bd765135c109dc8164831c9ccc6ea02ac6165ed625eea",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        32,
+        1270,
+        1185
+      ]
+    },
+    {
+      "path": "vehicle/astronaut-driver.png",
+      "width": 1278,
+      "height": 1230,
+      "bytes": 1018452,
+      "sha256": "3fa22d16a2f595293117cd724de9673f4cb7fd69e9cb6a849a001db0d4a69e4f",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        35,
+        1232,
+        1230
+      ]
+    },
+    {
+      "path": "vehicle/cargo-box.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1055100,
+      "sha256": "06233760f2d2d94841c6b5f3d3c0f4e652d9026a37822ee6d85fcc8360b0b3ca",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bounds": [
+        113,
+        33,
+        1452,
+        972
+      ]
+    },
+    {
+      "path": "world/solar-station.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1219087,
+      "sha256": "5220ed7a55c0423d3723dd9f3e78d6c934e4d00eda70b8f97081e909878596bf",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bounds": [
+        145,
+        41,
+        1488,
+        1024
+      ]
+    },
+    {
+      "path": "world/moon-rocks.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 590219,
+      "sha256": "af6edb5a04dc8505d419f60659d4d63bd529631974dd6f0710dc1483109bbd7d",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        49,
+        46,
+        1645,
+        887
+      ]
+    },
+    {
+      "path": "world/ground-details.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 357921,
+      "sha256": "0c7705a52646a687541c2701b3efd6ce9ca82e1723fa043ac90a345403fc5c81",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        90,
+        185,
+        1714,
+        798
+      ]
+    },
+    {
+      "path": "world/finish-flag.png",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 1038604,
+      "sha256": "804a5d3859eee5e0dfc9fa3e89d10c5911219b797aedadd117d22825a38ecc5c",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bounds": [
+        141,
+        125,
+        965,
+        1428
+      ]
+    },
+    {
+      "path": "backgrounds/cratered-planet.png",
+      "width": 1314,
+      "height": 1197,
+      "bytes": 1099958,
+      "sha256": "76e74261a7369634f32bcc7fdf391b4786dc557ec249509f30833717396b7f34",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        31,
+        23,
+        1260,
+        1197
+      ]
+    },
+    {
+      "path": "backgrounds/mountains-far.png",
+      "width": 2172,
+      "height": 724,
+      "bytes": 490654,
+      "sha256": "d886b23887d20a063ce2bf69de170cec69b5ae886ac497da6ae4e8d9d3ffbfbf",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        85,
+        2171,
+        706
+      ]
+    },
+    {
+      "path": "backgrounds/mountains-near.png",
+      "width": 2172,
+      "height": 724,
+      "bytes": 721709,
+      "sha256": "c7540e46cc81a4c389b8e13aa1a2057ff7b679e4080171eec324ee98ef101f90",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        15,
+        60,
+        2156,
+        701
+      ]
+    },
+    {
+      "path": "backgrounds/star-sparkle.png",
+      "width": 1278,
+      "height": 1230,
+      "bytes": 166574,
+      "sha256": "c54d36b7849f9d7497c65d53d0c396c7d7ff1479f928469107a99b2d11ec8df4",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        96,
+        1209,
+        1172
+      ]
+    },
+    {
+      "path": "effects/moon-dust.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 842860,
+      "sha256": "9a440c3a79e8ba1f5306267492ceeb646897d013c47e8b73164c026db9b409fe",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bounds": [
+        111,
+        87,
+        1410,
+        984
+      ]
+    },
+    {
+      "path": "ui/pedal-brake.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 815296,
+      "sha256": "fbec2a8471a0c5ad8acce892386aad8d4c6e8eadc52bc3879d709c73b01d0830",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        172,
+        1629,
+        815
+      ]
+    },
+    {
+      "path": "ui/pedal-gas.png",
+      "width": 1956,
+      "height": 804,
+      "bytes": 1123664,
+      "sha256": "4d956308f965ccf5025bd8070c2571ef1b7c606bd19d613f899d76299fbf7c71",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        97,
+        64,
+        1921,
+        729
+      ]
+    },
+    {
+      "path": "ui/button-pause.png",
+      "width": 1305,
+      "height": 1205,
+      "bytes": 427459,
+      "sha256": "200bf83e9655c1e6e5a3b040142f44091a61cd05ba2355be6538b20737c290c1",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1194,
+        1069
+      ]
+    },
+    {
+      "path": "ui/button-restart.png",
+      "width": 1275,
+      "height": 1234,
+      "bytes": 883179,
+      "sha256": "2accf87d18af46f078c04b83fc3499bb70115cdd03e0cca8a6c40b8c9f2f0475",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bounds": [
+        0,
+        37,
+        1120,
+        1152
+      ]
+    }
+  ]
+}
