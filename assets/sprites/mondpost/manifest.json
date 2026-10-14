@@ -206,8 +206,8 @@
       "source": "world/finish-flag.png",
       "source_sha256": "804a5d3859eee5e0dfc9fa3e89d10c5911219b797aedadd117d22825a38ecc5c",
       "runtime": "assets/sprites/mondpost/world/finish-flag.png",
-      "width": 84,
-      "height": 136,
+      "width": 128,
+      "height": 208,
       "crop": [
         140,
         124,
@@ -215,17 +215,17 @@
         1428
       ],
       "pivot": [
-        42.0,
-        68.0
+        64.0,
+        104.0
       ],
       "group": "world",
       "floor_anchor": [
-        18.85,
-        131
+        28.15,
+        202
       ],
       "use": "bottom center at existing finish x=3600",
-      "sha256": "671cb111ac24a307778c0c400a68fab35e9f43726083418a14dc94c21a653982",
-      "rgba_bytes": 45696
+      "sha256": "789272a3a4c5d2d7aa0161c55d4dd928ddbe13102b93c88f55f043f60ddbb196",
+      "rgba_bytes": 106496
     },
     {
       "source": "backgrounds/cratered-planet.png",

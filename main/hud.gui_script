@@ -19,7 +19,10 @@ end
 local function place(b,x,y,s,enabled)
     local width=math.max(b.w*s,b.min_width or 0); local height=math.max(b.h*s,b.min_height or 0)
     gui.set_position(b.hit,vmath.vector3(x,y,0)); gui.set_size(b.hit,vmath.vector3(width,math.max(height,b.hit_height or 0),0))
-    gui.set_position(b.node,vmath.vector3(x,y,0)); gui.set_size(b.node,vmath.vector3(b.visual_w and b.visual_w*s or width,b.visual_h and b.visual_h*s or height,0))
+    gui.set_position(b.node,vmath.vector3(x,y,0))
+    -- Scale the whole nine-slice node; shrinking its size alone leaves 12px corners.
+    gui.set_size(b.node,vmath.vector3(b.visual_w or width/s,b.visual_h or height/s,0))
+    gui.set_scale(b.node,vmath.vector3(s,s,1))
     gui.set_position(b.label,vmath.vector3(x,y,0)); gui.set_scale(b.label,vmath.vector3(math.max(.8*s,.54),math.max(.8*s,.54),1))
     gui.set_enabled(b.hit,enabled~=false); gui.set_enabled(b.node,enabled~=false); gui.set_enabled(b.label,enabled~=false)
     if b.icon then
@@ -81,7 +84,7 @@ function update(self,dt)
     place(self.pause,right-control/2,top,scale)
     place(self.restart,right-control-gap-control/2,top,scale)
     place(self.dev,right-2*control-gap-dev_gap-dev/2,top,scale)
-    gui.set_position(self.header,vmath.vector3(left+185*scale,top,0)); gui.set_size(self.header,vmath.vector3(370*scale,55*scale,0))
+    gui.set_position(self.header,vmath.vector3(left+185*scale,top,0)); gui.set_size(self.header,vmath.vector3(370,55,0));gui.set_scale(self.header,vmath.vector3(scale,scale,1))
     gui.set_position(self.distance,vmath.vector3(left+170*scale,top,0))
     gui.set_scale(self.distance,vmath.vector3(math.max(.8*scale,.54),math.max(.8*scale,.54),1))
     gui.set_text(self.distance,string.format('MONDPOST  /  %03d m',state.distance))
@@ -101,7 +104,7 @@ function update(self,dt)
     local panel_top=top-math.max(55*scale,40)/2-5*scale
     local panel_height=compact and 180 or 198
     gui.set_position(self.panel,vmath.vector3(w/2,panel_top-panel_height*scale/2,0))
-    gui.set_size(self.panel,vmath.vector3(math.min(1180*scale,right-left),panel_height*scale,0))
+    gui.set_size(self.panel,vmath.vector3(math.min(1180,(right-left)/scale),panel_height,0));gui.set_scale(self.panel,vmath.vector3(scale,scale,1))
     for i,row in ipairs(self.rows) do
         local col=i>4 and 1 or 0; local r=(i-1)%4
         local x=w/2+(col==0 and -295 or 285)*scale; local y=panel_top-((compact and 35 or 40)+r*(compact and 29 or 32))*scale
@@ -112,6 +115,7 @@ function update(self,dt)
         place(row.minus,x+140*scale,y,scale,self.expanded); place(row.plus,x+195*scale,y,scale,self.expanded)
     end
     self.apply.h=compact and 30 or 32;self.defaults.h=self.apply.h
+    self.apply.w=compact and 240 or 220;self.defaults.w=compact and 170 or 160
     place(self.apply,w/2-120*scale,panel_top-(compact and 156 or 171)*scale,scale,self.expanded)
     place(self.defaults,w/2+95*scale,panel_top-(compact and 156 or 171)*scale,scale,self.expanded)
     gui.set_enabled(self.hint,self.expanded)

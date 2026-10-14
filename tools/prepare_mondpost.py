@@ -17,7 +17,7 @@ SPECS={
  'world/solar-station.png':((160,148),'world','bottom center at x=3230; decorative background only'),
  'world/moon-rocks.png':((160,80),'world','center, beneath the collision surface'),
  'world/ground-details.png':((192,48),'world','center, beneath the collision surface'),
- 'world/finish-flag.png':((84,136),'world','bottom center at existing finish x=3600'),
+ 'world/finish-flag.png':((128,208),'world','bottom center at existing finish x=3600'),
  'backgrounds/cratered-planet.png':((384,384),'backgrounds','center, far background; never collision'),
  'backgrounds/mountains-far.png':((1000,136),'backgrounds','center; feathered overlapping mirrored cards'),
  'backgrounds/mountains-near.png':((1000,170),'backgrounds','center; feathered overlapping mirrored cards'),

@@ -8,7 +8,7 @@ return {
     ['solar-station']={w=160,h=148,floor_x=79.62,floor_y=145},
     ['moon-rocks']={w=160,h=80,floor_x=79.04,floor_y=77},
     ['ground-details']={w=192,h=48,floor_x=102.6,floor_y=46},
-    ['finish-flag']={w=84,h=136,floor_x=18.85,floor_y=131},
+    ['finish-flag']={w=128,h=208,floor_x=28.15,floor_y=202},
     ['cratered-planet']={w=384,h=384,floor_x=189.78,floor_y=381},
     ['mountains-far']={w=1000,h=136,floor_x=503.47,floor_y=133},
     ['mountains-near']={w=1000,h=170,floor_x=499.49,floor_y=166},

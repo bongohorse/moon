@@ -38,7 +38,7 @@ Resolved during inspection:
 - Very weak source alpha noise and large canvas margins: explicit alpha/crop rules and premultiplied resampling, with original bytes retained.
 - Atlas page-size settings emitted arrays even with one page and caused wrong default-material rendering: use ordinary 2D atlases, with compiled-type checks to prevent recurrence.
 - Source spring diagonal/pivot differences and hidden coils: measured eye transform, actual point-driven stretch and reviewed layers.
-- Small HUD labels/close icon spacing: minimum readable text, wider top controls and separate rectangular touch areas; compact, relatively placed tuning avoids header/rover overlap.
+- Small HUD labels/close icon spacing: minimum readable text, wider top controls and separate rectangular touch areas; compact, relatively placed tuning avoids header/rover overlap. Nine-slice frames scale with their nodes rather than folding oversized corners on short phone controls. The taller flag remains visible above the rover at the finish.
 - Screenshot timing missed short keys/air poses and repeated photo pauses changed later landings: acknowledged held input and independent drives; no assertions weakened or simulation poses assigned.
 
 Final PR/main workflow links and published archive verification are recorded on the PR and #5. Production HTML5/debug Android and all required checks must be green before merge.

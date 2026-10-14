@@ -53,10 +53,15 @@ const fs=require('node:fs');const path=require('node:path');const assert=require
         ['landing',t=>t.x>950&&t.landings>0&&t.grounded]
       ];
       for(const [name,predicate] of cases) {
-        let captured=false;
+        let captured=false;console.log('Capturing '+name);
         for(let attempt=0;attempt<3&&!captured;attempt++) {
           await reset();await gas();
-          await page.waitForFunction(test=>eval('('+test+')')(window.moonTelemetry),predicate.toString(),{timeout:20000});
+          try {
+            await page.waitForFunction(test=>eval('('+test+')')(window.moonTelemetry),predicate.toString(),{timeout:20000});
+          } catch(error) {
+            if(error.name!=='TimeoutError')throw error;
+            console.log(name+' threshold missed in drive '+(attempt+1)+'; retrying from rest');continue;
+          }
           await page.keyboard.up('d');await page.keyboard.down('Space');
           await page.waitForFunction(()=>window.moonTelemetry.paused||window.moonTelemetry.finished,{},{timeout:5000});
           await page.keyboard.up('Space');await page.waitForTimeout(150);

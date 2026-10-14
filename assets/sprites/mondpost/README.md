@@ -27,7 +27,7 @@ All sprite pivots are canvas centers. Bottom anchors are in image pixels, with y
 | `world/solar-station.png` | 160×148 | 80, 74 | world | bottom center at x=3230; decorative background only |
 | `world/moon-rocks.png` | 160×80 | 80, 40 | world | center, beneath the collision surface |
 | `world/ground-details.png` | 192×48 | 96, 24 | world | center, beneath the collision surface |
-| `world/finish-flag.png` | 84×136 | 42, 68 | world | bottom center at existing finish x=3600 |
+| `world/finish-flag.png` | 128×208 | 64, 104 | world | bottom center at existing finish x=3600 |
 | `backgrounds/cratered-planet.png` | 384×384 | 192, 192 | backgrounds | center, far background; never collision |
 | `backgrounds/mountains-far.png` | 1000×136 | 500, 68 | backgrounds | center; feathered overlapping mirrored cards |
 | `backgrounds/mountains-near.png` | 1000×170 | 500, 85 | backgrounds | center; feathered overlapping mirrored cards |
@@ -46,7 +46,7 @@ The real wheel joint's rest anchors coincide at body-local `(±57,-46)` and whee
 
 ## World, effects and touch
 
-Mountain originals are not assumed seamless. Three overlapping cards per layer alternate mirroring and have 96px horizontal and 18px bottom feathers. There is no wrapping card teleport inside the fixed track. The planet and stars move slowly; rocks/details stay beneath the bright collision edge. The station has no collider, charging action or hint. The flag's computed bottom contact anchor is placed at the existing x=3600 finish.
+Mountain originals are not assumed seamless. Three overlapping cards per layer alternate mirroring and have 96px horizontal and 18px bottom feathers. There is no wrapping card teleport inside the fixed track. The planet and stars move slowly; rocks/details stay beneath the bright collision edge. The station has no collider, charging action or hint. The taller flag remains visible above the rover at the result; its computed bottom contact anchor is placed at the existing x=3600 finish.
 
 Moon dust is a sprite-based particle effect: **eight preallocated sprites**, 0.36s lifetime, at most one spawn per 0.1s, alternating actual wheels with an individual 26px ground probe and speed >80px/s. Pause, focus loss, restart and finish clear it. It never applies force or introduces physical objects.
 
