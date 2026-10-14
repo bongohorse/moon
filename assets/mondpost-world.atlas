@@ -1,0 +1,8 @@
+images { image: "/assets/sprites/mondpost/world/solar-station.png" }
+images { image: "/assets/sprites/mondpost/world/moon-rocks.png" }
+images { image: "/assets/sprites/mondpost/world/ground-details.png" }
+images { image: "/assets/sprites/mondpost/world/finish-flag.png" }
+images { image: "/assets/sprites/mondpost/backgrounds/star-sparkle.png" }
+images { image: "/assets/sprites/mondpost/effects/moon-dust.png" }
+margin: 2
+extrude_borders: 2

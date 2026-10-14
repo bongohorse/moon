@@ -1,0 +1,7 @@
+images { image: "/assets/sprites/mondpost/vehicle/rover-chassis.png" }
+images { image: "/assets/sprites/mondpost/vehicle/rover-wheel.png" }
+images { image: "/assets/sprites/mondpost/vehicle/rover-suspension.png" }
+images { image: "/assets/sprites/mondpost/vehicle/astronaut-driver.png" }
+images { image: "/assets/sprites/mondpost/vehicle/cargo-box.png" }
+margin: 2
+extrude_borders: 2

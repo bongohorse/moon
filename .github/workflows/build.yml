@@ -23,6 +23,7 @@ jobs:
       - run: npm test
       - run: npm run validate:renovate
       - run: node tests/extraction.cjs
+      - run: python3 tools/check_mondpost.py
   builds:
     name: Build (${{ matrix.platform }})
     runs-on: ubuntu-26.04

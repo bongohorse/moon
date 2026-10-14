@@ -13,6 +13,7 @@ npm ci
 npm test
 npm run validate:renovate
 node tests/extraction.cjs
+python3 tools/check_mondpost.py
 tools/build.sh wasm-web debug
 npm run test:browser
 ```
@@ -51,13 +52,15 @@ Outputs are in `dist/<platform>/MOON/`. Bob is downloaded from the official rele
 
 - `main/`: start scene, resources, renderer and Defold GUI.
 - `modules/`: vehicle, terrain, input, camera, shared state and central physics configuration.
-- `assets/`: original modular rover/wheel/spring/scenery/UI sprites in one atlas, closed soil mesh and locally bundled DejaVu font with its upstream notice.
+- `assets/source/mondpost/`: 18 preserved Imagegen originals.
+- `assets/sprites/mondpost/`: prepared small derivatives, pivots, provenance and [texture budget](assets/sprites/mondpost/README.md); four ordinary 2D atlases plus the utility atlas.
+- `assets/`: closed soil mesh and the local DejaVu font with its upstream notice.
 - `tests/`: independent Lua logic, actual Renovate extraction and Chromium functional tests.
-- `tools/`: pinned checksum-verified Defold build script and reproducible artwork generator.
+- `tools/`: pinned checksum-verified build script, reproducible Mondpost preparation, PNG inventory and compiled texture-budget checks.
 - `docs/`: [decisions/API evidence](docs/decisions.md), [phase plan](docs/plan.md), [validation](docs/validation.md), reference access record.
 
 ## Boundaries
 
-Phase one ends at owner acceptance. No battery/delivery/progression mechanics or further gameplay phases are started. Both concept images were visually inspected for the phase-one correction. Their original files remain unavailable for archival; see [reference access and provenance](docs/references/README.md) and [visual comparisons](docs/visual-review/README.md). Visual acceptance remains with the owner. No project/asset license was selected by the owner; licensing remains open.
+Phase one ends at owner acceptance. No battery/delivery/progression mechanics or further gameplay phases are started. Both concept images were visually inspected for the phase-one correction. Their original files remain unavailable for archival; see [reference access and provenance](docs/references/README.md) and [current asset-integration comparisons](docs/asset-integration/README.md). Visual acceptance remains with the owner. No project/asset license was selected by the owner; licensing remains open.
 
 60 FPS is a target, not a measured mobile guarantee. Automated headless Chromium and emulated touch are separate from manual desktop control and real-device testing. No Android/iOS device was attached; no device installation or device acceptance is claimed. See the validation record for actual evidence and remaining limits.
