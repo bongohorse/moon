@@ -1,5 +1,6 @@
 -- Cosmetic scene only. Physical bodies, joints and settings are never written here.
 local terrain=require 'modules.terrain'
+local energy=require 'modules.energy'
 local sizes=require 'modules.mondpost_assets'
 local M={}
 local function tint(id,color) go.set(msg.url(nil,id,'sprite'),'tint',color) end
@@ -22,7 +23,7 @@ local function clear_dust(a)
     end
 end
 function M.create()
-    local a={count=0,stars={},ridges={},springs={},dust={},dust_clock=0,dust_index=0,emitted=0}
+    local a={count=0,stars={},ridges={},springs={},dust={},dust_clock=0,dust_index=0,emitted=0,collectibles={}}
     for i=1,18 do
         local x=(i*173)%2100;local y=420+(i*79)%265
         local id=object(a,'star-sparkle',vmath.vector3(x,y,0),i%5==0 and .23 or .12,-.9,vmath.vector4(.82,.89,1,.75))
@@ -38,23 +39,24 @@ function M.create()
             a.ridges[#a.ridges+1]={id=id,x=-500+(i-1)*1800,layer=layer}
         end
     end
-    -- Preserve the existing exact terrain edge and closed mesh.
-    for i=1,#terrain.points-1 do
-        local p,q=terrain.points[i],terrain.points[i+1];local dx,dy=q[1]-p[1],q[2]-p[2]
-        local length=math.sqrt(dx*dx+dy*dy)
-        local id=factory.create('#pixel',vmath.vector3((p[1]+q[1])/2,(p[2]+q[2])/2,-.1),
-            vmath.quat_rotation_z(math.atan2(dy,dx)),nil,vmath.vector3((length+2)/8,3/8,1))
-        a.count=a.count+1;tint(id,vmath.vector4(.87,.84,.98,1))
-    end
+    -- Closed soil and bright rim are meshes generated from the same collision samples.
     for i=1,12 do
-        local x=-300+i*330
+        local x=-300+i*1040
         object(a,'moon-rocks',vmath.vector3(x,terrain.height(x)-48-(i*29)%105,0),.28+(i%3)*.09,-.05)
     end
     for i=1,10 do
-        local x=-200+i*410
+        local x=-200+i*1190
         object(a,'ground-details',vmath.vector3(x,terrain.height(x)-30-(i*19)%90,0),.45,-.04)
     end
-    floor_object(a,'solar-station',3230,terrain.height(3230)-4,.9,-.3)
+    for _,x in ipairs(terrain.stations) do
+        -- Offset the decorative tower; the centered platform is the charging area.
+        local pad=factory.create('#pixel',vmath.vector3(x,terrain.height(x)+2,-.08),nil,nil,vmath.vector3(energy.charge_radius*2/8,5/8,1))
+        a.count=a.count+1;tint(pad,vmath.vector4(.47,.86,.91,1))
+        floor_object(a,'solar-station',x+100,terrain.height(x+100)-4,.9,-.3)
+    end
+    for i=1,10 do
+        a.collectibles[i]=object(a,'star-sparkle',vmath.vector3(),1.35,.5,vmath.vector4(1,.85,.3,1))
+    end
     floor_object(a,'finish-flag',terrain.finish,terrain.height(terrain.finish),1,.05)
     for i=1,2 do
         a.springs[i]=factory.create('#spring',vmath.vector3(0,0,.35));a.count=a.count+1
@@ -108,10 +110,22 @@ function M.update(a,state,vehicle,dt)
     end
     go.set_position(vmath.vector3(state.camera_x+view*.78-state.camera_x*.015,490+state.camera_y,-.85),a.moon)
     for _,r in ipairs(a.ridges) do
-        go.set_position(vmath.vector3(state.camera_x+r.x-state.camera_x*(r.layer==1 and .12 or .24),
+        go.set_position(vmath.vector3(state.camera_x+((r.x-state.camera_x*(r.layer==1 and .12 or .24)+2000)%5400)-2000,
             (r.layer==1 and 330 or 265)+state.camera_y*(r.layer==1 and .95 or .85),-.8+r.layer*.1),r.id)
     end
-    local p=go.get_position(vehicle.body);local rotation=go.get_rotation(vehicle.body)
+    local p=go.get_position(vehicle.body)
+    local visible={}
+    for i,s in ipairs(terrain.stars) do
+        if not state.energy.collected[i] and s[1]>=state.camera_x-100 and s[1]<=state.camera_x+view+100 then
+            visible[#visible+1]=s
+        end
+    end
+    for i,id in ipairs(a.collectibles) do
+        local s=visible[i]
+        msg.post(msg.url(nil,id,'sprite'),s and 'enable' or 'disable')
+        if s then go.set_position(vmath.vector3(s[1],s[2],.5),id) end
+    end
+    local rotation=go.get_rotation(vehicle.body)
     local minimum,maximum=math.huge,0
     for i,w in ipairs(vehicle.wheels) do
         -- Joint rest anchor is (±57,-46), axis (0,1), wheel anchor its center.
@@ -125,7 +139,7 @@ function M.update(a,state,vehicle,dt)
         go.set_scale(vmath.vector3(.8,math.max(.01,length/60),1),a.springs[i])
         minimum=math.min(minimum,length);maximum=math.max(maximum,length)
     end
-    state.graphics={dust=update_dust(a,state,vehicle,dt),emitted=a.emitted,sprites=a.count+20,
+    state.graphics={dust=update_dust(a,state,vehicle,dt),emitted=a.emitted,sprites=a.count+5,
         spring_min=minimum,spring_max=maximum}
 end
 return M

@@ -16,3 +16,7 @@ Stop here. Subsequent work requires owner approval.
 - Native mobile performance profiling, store preparation and iOS builds/signing.
 
 No future milestone or gameplay implementation is started by this phase.
+
+## Owner-authorized next scope: route and solar gameplay
+
+Issue #16 replaces the short angular test course with a 1,222 m rounded route, 39 collectible stars, four functional solar stops and an energy HUD. Include cold-load input regression, sustained full-route solar driving, resource-bound validation and HTML5/Android artifacts. Stop for owner acceptance after reviewed publication; deliveries/upgrades/persistence remain outside scope.

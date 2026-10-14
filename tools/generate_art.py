@@ -111,12 +111,7 @@ a.save('soil')
 a=Art(42,24);a.poly([(2,21),(7,9),(18,2),(29,8),(39,22)],'#494564',INK,1);a.poly([(7,9),(18,2),(16,17),(2,21)],'#79719c');a.poly([(18,2),(29,8),(24,15),(16,17)],'#615a84');a.save('rock')
 print('Generated original modular artwork in assets/')
 
-# Closed render mesh derives from the canonical track; never changes colliders.
-import re, json
-track=(OUT.parent/'modules/terrain.lua').read_text().split('M.points=',1)[1].split('M.finish=',1)[0]
-points=[tuple(map(int,p)) for p in re.findall(r'\{(-?\d+),(\d+)\}',track)]
-positions=[];uv=[]
-for a,b in zip(points,points[1:]):
- for x,y in [a,(a[0],-800),b,b,(a[0],-800),(b[0],-800)]:
-  positions.extend([x,y,-.2]);uv.extend([x/128,y/128])
-(OUT/'terrain.buffer').write_text(json.dumps([{'name':'position','type':'float32','count':3,'data':positions},{'name':'texcoord0','type':'float32','count':2,'data':uv}],indent=2)+'\n')
+# Route geometry has a dedicated deterministic source, shared with collision data.
+# Keep this legacy artwork command from reconstructing the old angular test course.
+import runpy
+runpy.run_path(str(OUT.parent/'tools/build_level.py'),run_name='__main__')

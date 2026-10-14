@@ -148,7 +148,7 @@
         79.62,
         145
       ],
-      "use": "bottom center at x=3230; decorative background only",
+      "use": "bottom contact at solar platforms; charging handled by gameplay logic",
       "sha256": "0f84cc99d29b5c7b51c392987e079aab39d42deba45a2a1734a576a47e222f09",
       "rgba_bytes": 94720
     },
@@ -223,7 +223,7 @@
         28.15,
         202
       ],
-      "use": "bottom center at existing finish x=3600",
+      "use": "bottom contact at terrain.finish",
       "sha256": "789272a3a4c5d2d7aa0161c55d4dd928ddbe13102b93c88f55f043f60ddbb196",
       "rgba_bytes": 106496
     },
@@ -323,7 +323,7 @@
         11.0,
         26
       ],
-      "use": "center; sparse background stars",
+      "use": "center; sparse sky stars and pooled gold collectibles",
       "sha256": "3bf9eac26db47ff1a069a3d02587d5c2f3394108737586c8f509c27b322337b6",
       "rgba_bytes": 2688
     },

@@ -29,4 +29,4 @@ fi
 java -cp "$bob" tools/TextureBudget.java \
   build/default/assets/mondpost-vehicle.texturec build/default/assets/mondpost-world.texturec \
   build/default/assets/mondpost-backgrounds.texturec build/default/assets/mondpost-ui.texturec \
-  build/default/assets/moon.texturec build/default/assets/soil.texturec
+  build/default/assets/moon.texturec build/default/assets/soil.texturec build/default/assets/pixel.texturec

@@ -24,6 +24,7 @@ jobs:
       - run: npm run validate:renovate
       - run: node tests/extraction.cjs
       - run: python3 tools/check_mondpost.py
+      - run: python3 tools/build_level.py --check
   builds:
     name: Build (${{ matrix.platform }})
     runs-on: ubuntu-26.04

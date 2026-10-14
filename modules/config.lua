@@ -1,4 +1,6 @@
 local M = {}
+-- Low-speed solar docking: bound deceleration below the short wheelbase's tipping threshold.
+M.docking_brake=6.5
 M.spec = {
     {key='gravity', label='Gravity', min=180, max=900, step=60, default=480},
     {key='torque', label='Motor torque', min=2, max=40, step=2, default=14},
@@ -9,6 +11,10 @@ M.spec = {
     {key='damping', label='Damping ratio', min=0.1, max=1, step=0.1, default=0.7},
     {key='air', label='Air force', min=0, max=60, step=5, default=25},
 }
+function M.brake_torque(requested,grounded,docking,speed)
+    if grounded and docking and math.abs(speed)>5 then return math.min(requested,M.docking_brake) end
+    return requested
+end
 function M.defaults()
     local t = {}; for _, s in ipairs(M.spec) do t[s.key] = s.default end; return t
 end

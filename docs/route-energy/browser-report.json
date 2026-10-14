@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8767/MOON/",
+  "checks": [
+    "cold first-load gas wakes the sleeping rover without reload or restart",
+    "keyboard acceleration, braking and both-pedal priority",
+    "pause freezes bodies, resume and focus-loss clear input",
+    "five repeated restarts",
+    "collapsed tuning, bounded staged settings and apply/restart",
+    "CDP emulated two-finger touch and independent releases",
+    "transparent image margin uses the separate full pedal touch area",
+    "airborne brake changes physical angular velocity toward nose-down",
+    "four functional solar stops, paused charging, collected stars and 1.2 km finish",
+    "ground-contact dust, paused emission and eight-particle/128-sprite ceilings",
+    "default track completed: 1222 m, 31 airborne steps, 2 landings; suspension moved",
+    "4:3 tablet, wide-phone and small 960x432 viewport startup/screenshots",
+    "default run without solar stops fully empties battery; gas disables, brake remains available, restart recovers",
+    "isolated cold mobile-emulated first touch wakes sleeping rover without reload"
+  ],
+  "route": {
+    "distance": 1222,
+    "collectedStars": 39,
+    "totalStars": 39,
+    "batteryAtFinish": 84.2,
+    "solarStops": 4
+  },
+  "graphics": {
+    "maxSprites": 81,
+    "maxTerrainBodies": 80,
+    "maxDust": 4,
+    "minSpan": 12.003,
+    "maxSpan": 38.833
+  },
+  "limitations": [
+    "Headless Chromium, software rendering; no physical device or FPS certification."
+  ]
+}

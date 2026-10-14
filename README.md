@@ -14,6 +14,7 @@ npm test
 npm run validate:renovate
 node tests/extraction.cjs
 python3 tools/check_mondpost.py
+python3 tools/build_level.py --check
 tools/build.sh wasm-web debug
 npm run test:browser
 ```
@@ -28,13 +29,17 @@ Open the server locally in a browser. Builds are self-contained, including engin
 
 ## Drive
 
+- A settled rover wakes when a pedal changes; first launch and parked solar stops do not require a reload.
 - **D / right arrow:** gas. **A / left arrow:** brake.
 - Touch: large **BRAKE** pedal left, **GAS** pedal right. Two fingers supported; brake wins when both are held.
 - In air, gas raises the nose and brake lowers it, with bounded torque and documented tilt assistance.
 - **Space / Pause:** pause or resume. **R / Restart:** immediate fresh rover.
 - Focus loss/app switch pauses and resets inputs. Resume explicitly.
 - **Tuning +** opens the top panel. Adjust eight bounded settings. **Apply + Restart** applies them; **Defaults** stages the baseline again. All changes require restart.
-- Drive from the flat start over hills, ramp, shallow crater and broad landing area to the cyan finish marker. Acceptance is about controllable jumps, suspension travel and landing feel.
+- Drive the **1,222 m rounded route**, collect up to **39 stars**, and use **four solar stops**. Gold stars are collected by physical proximity to the buggy; they reset on restart.
+- Battery drains while accelerating (4 percentage points/second on ground, half in air). Braking and coasting cost no energy. At 0%, motor and gas air assistance stop; brakes still work.
+- Cyan solar platforms recharge at 20 points/second when grounded, below 70 px/s, and gas is released or brake is held. Stop and wait about five seconds for a full battery. Hold brake to stay inside the zone. The HUD shows energy, stars and the next solar stop.
+- Restart resets the route, full battery and stars. There is no delivery economy, upgrade system or persistent progression.
 
 ## Builds and CI
 
@@ -55,12 +60,13 @@ Outputs are in `dist/<platform>/MOON/`. Bob is downloaded from the official rele
 - `assets/source/mondpost/`: 18 preserved Imagegen originals.
 - `assets/sprites/mondpost/`: prepared small derivatives, pivots, provenance and [texture budget](assets/sprites/mondpost/README.md); four ordinary 2D atlases plus the utility atlas.
 - `assets/`: closed soil mesh and the local DejaVu font with its upstream notice.
+- `tools/build_level.py`: reproducible sampled route, collision data and matching terrain/rim meshes; edit its control knots and run it after a route change.
 - `tests/`: independent Lua logic, actual Renovate extraction and Chromium functional tests.
 - `tools/`: pinned checksum-verified build script, reproducible Mondpost preparation, PNG inventory and compiled texture-budget checks.
 - `docs/`: [decisions/API evidence](docs/decisions.md), [phase plan](docs/plan.md), [validation](docs/validation.md), reference access record.
 
 ## Boundaries
 
-Phase one ends at owner acceptance. No battery/delivery/progression mechanics or further gameplay phases are started. Both concept images were visually inspected for the phase-one correction. Their original files remain unavailable for archival; see [reference access and provenance](docs/references/README.md) and [current asset-integration comparisons](docs/asset-integration/README.md). Visual acceptance remains with the owner. No project/asset license was selected by the owner; licensing remains open.
+The owner explicitly authorized the extended route, stars, battery and solar charging in [#16](https://github.com/bongohorse/moon/issues/16). This scope ends at owner acceptance; no deliveries, upgrades or further progression starts automatically. Both concept images were visually inspected for the phase-one correction. Their original files remain unavailable for archival; see [reference access and provenance](docs/references/README.md) and [current asset-integration comparisons](docs/asset-integration/README.md). Visual acceptance remains with the owner. No project/asset license was selected by the owner; licensing remains open.
 
 60 FPS is a target, not a measured mobile guarantee. Automated headless Chromium and emulated touch are separate from manual desktop control and real-device testing. No Android/iOS device was attached; no device installation or device acceptance is claimed. See the validation record for actual evidence and remaining limits.

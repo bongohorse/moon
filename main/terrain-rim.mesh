@@ -1,0 +1,5 @@
+material: "/main/terrain-rim.material"
+vertices: "/assets/terrain-rim.buffer"
+textures: "/assets/pixel.png"
+primitive_type: PRIMITIVE_TRIANGLES
+position_stream: "position"

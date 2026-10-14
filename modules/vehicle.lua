@@ -1,4 +1,5 @@
 local M={}
+local config=require 'modules.config'
 local function co(id) return msg.url(nil,id,'co') end
 function M.create(settings)
     local p=vmath.vector3(180,294,0)
@@ -28,11 +29,20 @@ function M.enable(v,enabled)
 end
 function M.step(v,s,gas,brake,dt)
     local cfg=s.settings
+    -- Box2D 3 motor setters do not reliably wake a settled/sleeping island.
+    -- Wake all three physical bodies on control edges (cold idle, solar parking, resume).
+    if v.gas~=gas or v.brake~=brake then
+        for _,id in ipairs({v.body,v.wheels[1],v.wheels[2]}) do
+            b2d.body.set_awake(b2d.get_body(co(id)),true)
+        end
+        v.gas=gas;v.brake=brake
+    end
+    local brake_torque=config.brake_torque(cfg.brake,s.grounded,s.energy and s.energy.docking,s.speed)
     for _,j in ipairs(v.joints) do
         b2d.joint.enable_motor(j,gas or brake)
         b2d.joint.set_motor_speed(j,gas and -cfg.speed or 0)
         -- The supported low-level API scales project torque by physics.scale.
-        b2d.joint.set_max_motor_torque(j,(brake and cfg.brake or cfg.torque)/0.01)
+        b2d.joint.set_max_motor_torque(j,(brake and brake_torque or cfg.torque)/0.01)
     end
     local grounded=false
     for _,w in ipairs(v.wheels) do
