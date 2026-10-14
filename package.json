@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "fengari tests/logic.lua",
+    "test": "node tools/test_logic.cjs",
     "test:browser": "node tests/browser.cjs",
     "validate:renovate": "renovate-config-validator renovate.json"
   },

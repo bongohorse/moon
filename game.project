@@ -28,6 +28,8 @@ version_code = 1
 [html5]
 htmlfile = /main/index.html
 scale_mode = stretch
+show_fullscreen_button = 0
+show_made_with_defold = 0
 [collection]
 max_instances = 256
 [script]

@@ -5,19 +5,24 @@ local input=require 'modules.input'
 local camera=require 'modules.camera'
 local config=require 'modules.config'
 local art=require 'modules.art'
+local energy=require 'modules.energy'
 local function restart(self)
     if self.vehicle then vehicle.destroy(self.vehicle) end
     state.settings=config.copy(state.pending); state.dirty=false
     self.vehicle=vehicle.create(state.settings)
     state.paused=false; state.finished=false; state.restart=false
+    state.energy=energy.new(); state.started=false; state.motor_gas=false
+    state.grounded=false;state.speed=0;state.suspension=0;state.air_frames=0;state.landings=0
     state.distance=0; state.restarts=state.restarts+1; input.clear(state.input)
     camera.update(state,go.get_position(self.vehicle.body),0,true)
 end
 function init(self)
-    terrain.create(); restart(self)
+    self.terrain=terrain.create(); restart(self)
     self.art=art.create()
     window.set_listener(function(_,event)
         if event==window.WINDOW_EVENT_FOCUS_LOST or event==window.WINDOW_EVENT_ICONIFIED then
+            -- Startup canvas focus transitions must not lock the very first pedal.
+            if not state.started then return end
             state.paused=true; input.clear(state.input)
             vehicle.enable(self.vehicle,false)
         end
@@ -25,11 +30,16 @@ function init(self)
 end
 function fixed_update(self,dt)
     if state.restart then restart(self) end
+    terrain.update(self.terrain,go.get_position(self.vehicle.body).x)
     vehicle.enable(self.vehicle,not state.paused and not state.finished)
-    if state.paused or state.finished then return end
+    if state.paused or state.finished then state.energy.charging=false;state.motor_gas=false;return end
     local gas,brake=input.pedals(state.input)
-    vehicle.step(self.vehicle,state,gas,brake,dt)
+    local before=go.get_position(self.vehicle.body)
+    energy.step(state.energy,terrain.stations,before.x,state.speed,state.grounded,gas,brake,false,dt)
+    state.motor_gas=gas and state.energy.battery>0
+    vehicle.step(self.vehicle,state,state.motor_gas,brake,dt)
     local p=go.get_position(self.vehicle.body)
+    energy.collect(state.energy,terrain.stars,p.x,p.y)
     state.distance=math.max(0,math.floor((p.x-180)/10))
     if p.x>=terrain.finish then state.finished=true; input.clear(state.input) end
     if p.y<60 then state.paused=true; input.clear(state.input) end
@@ -40,8 +50,8 @@ function update(self,dt)
     art.update(self.art,state,self.vehicle,dt)
     -- Test harness reads telemetry only; it cannot change simulation state.
     if html5 and html5.run then
-        html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s,spin:%.3f,dustCount:%d,dustEmitted:%d,artSprites:%d,springSpanMin:%.3f,springSpanMax:%.3f,tuningOpen:%s};',
-            state.distance,state.speed,tostring(state.grounded),state.suspension,tostring(state.paused),tostring(state.finished),state.restarts,state.air_frames,state.landings,p.x,p.y,tostring(select(1,input.pedals(state.input))),tostring(select(2,input.pedals(state.input))),state.settings.gravity,state.pending.gravity,tostring(state.dirty),go.get(msg.url(nil,self.vehicle.body,"co"),"angular_velocity").z,state.graphics.dust,state.graphics.emitted,state.graphics.sprites,state.graphics.spring_min,state.graphics.spring_max,tostring(state.tuning_open or false)))
+        html5.run(string.format('window.moonTelemetry={distance:%d,speed:%.3f,grounded:%s,suspension:%.3f,paused:%s,finished:%s,restarts:%d,airFrames:%d,landings:%d,x:%.3f,y:%.3f,gas:%s,brake:%s,gravity:%.1f,pendingGravity:%.1f,dirty:%s,spin:%.3f,dustCount:%d,dustEmitted:%d,artSprites:%d,springSpanMin:%.3f,springSpanMax:%.3f,tuningOpen:%s,battery:%.3f,charging:%s,station:%d,stars:%d,totalStars:%d,finishX:%d,terrainBodies:%d,motorGas:%s,clearance:%.3f,awake:%s};',
+            state.distance,state.speed,tostring(state.grounded),state.suspension,tostring(state.paused),tostring(state.finished),state.restarts,state.air_frames,state.landings,p.x,p.y,tostring(select(1,input.pedals(state.input))),tostring(select(2,input.pedals(state.input))),state.settings.gravity,state.pending.gravity,tostring(state.dirty),go.get(msg.url(nil,self.vehicle.body,"co"),"angular_velocity").z,state.graphics.dust,state.graphics.emitted,state.graphics.sprites,state.graphics.spring_min,state.graphics.spring_max,tostring(state.tuning_open or false),state.energy.battery,tostring(state.energy.charging),state.energy.station,state.energy.stars,#terrain.stars,terrain.finish,terrain.count(self.terrain),tostring(state.motor_gas or false),p.y-terrain.height(p.x),tostring(b2d.body.is_awake(b2d.get_body(msg.url(nil,self.vehicle.body,"co"))))))
     end
 end
 function final(self) window.set_listener(nil) end

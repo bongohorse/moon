@@ -24,14 +24,14 @@ All sprite pivots are canvas centers. Bottom anchors are in image pixels, with y
 | `vehicle/rover-suspension.png` | 24×84 | 12, 42 | vehicle | eye centers (12,12) and (12,72); stretch between mounts |
 | `vehicle/astronaut-driver.png` | 68×88 | 34, 44 | vehicle | body attachment (24,32); behind chassis |
 | `vehicle/cargo-box.png` | 72×44 | 36, 22 | vehicle | body attachment (-38,33); behind chassis |
-| `world/solar-station.png` | 160×148 | 80, 74 | world | bottom center at x=3230; decorative background only |
+| `world/solar-station.png` | 160×148 | 80, 74 | world | bottom contact at solar platforms; charging handled by gameplay logic |
 | `world/moon-rocks.png` | 160×80 | 80, 40 | world | center, beneath the collision surface |
 | `world/ground-details.png` | 192×48 | 96, 24 | world | center, beneath the collision surface |
-| `world/finish-flag.png` | 128×208 | 64, 104 | world | bottom center at existing finish x=3600 |
+| `world/finish-flag.png` | 128×208 | 64, 104 | world | bottom contact at terrain.finish |
 | `backgrounds/cratered-planet.png` | 384×384 | 192, 192 | backgrounds | center, far background; never collision |
 | `backgrounds/mountains-far.png` | 1000×136 | 500, 68 | backgrounds | center; feathered overlapping mirrored cards |
 | `backgrounds/mountains-near.png` | 1000×170 | 500, 85 | backgrounds | center; feathered overlapping mirrored cards |
-| `backgrounds/star-sparkle.png` | 24×28 | 12, 14 | world | center; sparse background stars |
+| `backgrounds/star-sparkle.png` | 24×28 | 12, 14 | world | center; sparse sky stars and pooled gold collectibles |
 | `effects/moon-dust.png` | 64×48 | 32, 24 | world | center; bounded eight-sprite particle pool |
 | `ui/pedal-brake.png` | 256×104 | 128, 52 | ui | center; separate 240x115 touch rectangle |
 | `ui/pedal-gas.png` | 256×100 | 128, 50 | ui | center; separate 240x115 touch rectangle |
@@ -46,7 +46,7 @@ The real wheel joint's rest anchors coincide at body-local `(±57,-46)` and whee
 
 ## World, effects and touch
 
-Mountain originals are not assumed seamless. Three overlapping cards per layer alternate mirroring and have 96px horizontal and 18px bottom feathers. There is no wrapping card teleport inside the fixed track. The planet and stars move slowly; rocks/details stay beneath the bright collision edge. The station has no collider, charging action or hint. The taller flag remains visible above the rover at the result; its computed bottom contact anchor is placed at the existing x=3600 finish.
+Mountain originals are not assumed seamless. Three overlapping cards per layer alternate mirroring and have 96px horizontal and 18px bottom feathers. Cards recycle outside the supported landscape view for the extended route; alpha feathers and mirrored overlaps hide uncertified image edges. The planet and stars move slowly; rocks/details stay beneath the bright collision edge. Station images have no collider; the owner-authorized solar zones now charge through independent gameplay logic and have cyan ground marks and HUD feedback. The taller flag remains visible above the rover at the result; its computed bottom contact anchor is placed at the current `terrain.finish` (x=12400).
 
 Moon dust is a sprite-based particle effect: **eight preallocated sprites**, 0.36s lifetime, at most one spawn per 0.1s, alternating actual wheels with an individual 26px ground probe and speed >80px/s. Pause, focus loss, restart and finish clear it. It never applies force or introduces physical objects.
 
@@ -60,9 +60,12 @@ Pedals use **240×115 design-unit touch rectangles** independent of alpha paddin
 | World, stars and dust | 512×256 | RGBA, 1 | 524,288 B |
 | Backgrounds | 1024×1024 | RGBA, 1 | 4,194,304 B |
 | UI | 512×256 | RGBA, 1 | 524,288 B |
-| Utility pixel/legacy collider sprite | 64×64 | RGBA, 1 | 16,384 B |
+| Utility pixel | 64×64 | RGBA, 1 | 16,384 B |
 | Soil | 128×128 | RGBA, 1 | 65,536 B |
+| Terrain rim pixel | 8×8 | RGBA, 1 | 256 B |
 
-Total: **5,586,944 B / 5.328 MiB**. These are compiled texture payloads, excluding font cache, framebuffers, driver overhead and engine memory; they are not device VRAM/FPS measurements. `tools/TextureBudget.java` checks every build: ordinary single-page 2D textures, ≤2048 per dimension, ≤8 MiB aggregate. Explicit atlas page-size fields produce arrays even with one page in this SDK and were removed for compatibility with the existing materials. No engine, action or dependency versions were changed.
+Total: **5,587,200 B / 5.328 MiB**. These are compiled texture payloads, excluding font cache, framebuffers, driver overhead and engine memory; they are not device VRAM/FPS measurements. `tools/TextureBudget.java` checks every build: ordinary single-page 2D textures, ≤2048 per dimension, ≤8 MiB aggregate. Explicit atlas page-size fields produce arrays even with one page in this SDK and were removed for compatibility with the existing materials. No engine, action or dependency versions were changed.
 
-94 allocated scene sprites (including the inactive dust pool and disabled collider-slab sprites), at most 99 during deferred rover replacement, fit the existing 128-sprite limit. GUI remains below its 256-node limit. [Comparisons and test evidence](../../../docs/asset-integration/README.md) distinguish browser/touch emulation from real-device acceptance.
+The extended route allocates 81 steady scene sprites (86 during deferred rover replacement) including the inactive dust/collectible pools; ground slabs have no sprite, and two meshes render soil/rim without per-segment sprites. This fits the existing 128-sprite limit. GUI remains below its 256-node limit. [Comparisons and test evidence](../../../docs/asset-integration/README.md) distinguish browser/touch emulation from real-device acceptance.
+
+[Extended route and solar gameplay evidence](../../../docs/route-energy/README.md) records the newer owner-authorized scope.

@@ -160,13 +160,30 @@
 <script>
 // Defold's HTML5 GLFW listens for canvas blur. Bridge tab/app lifecycle
 // events to that supported callback so the Lua window listener pauses.
+// Focus on the first real pointer interaction, including after an early loading tap.
+// Do not synthesize key/pointer presses or require a page reload.
+const gameCanvas = document.getElementById('canvas');
+gameCanvas.style.touchAction = 'none';
+gameCanvas.addEventListener('pointerdown', function () {
+    gameCanvas.focus({preventScroll: true});
+    gameCanvas.dispatchEvent(new FocusEvent('focus'));
+}, {capture: true});
 function pauseCanvasOnBlur() {
     const canvas = document.getElementById('canvas');
     if (canvas) canvas.dispatchEvent(new FocusEvent('blur'));
 }
+function focusCanvasOnReturn() {
+    if (!document.hidden) {
+        gameCanvas.focus({preventScroll: true});
+        // GLFW listens on canvas, whereas tab/window focus is delivered on window.
+        gameCanvas.dispatchEvent(new FocusEvent('focus'));
+    }
+}
 window.addEventListener('blur', pauseCanvasOnBlur);
+window.addEventListener('focus', focusCanvasOnReturn);
 document.addEventListener('visibilitychange', function () {
     if (document.hidden) pauseCanvasOnBlur();
+    else focusCanvasOnReturn();
 });
 </script>
 </body>

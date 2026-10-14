@@ -1,6 +1,8 @@
 local state=require 'modules.state'
 local config=require 'modules.config'
 local input=require 'modules.input'
+local terrain=require 'modules.terrain'
+local energy=require 'modules.energy'
 local navy=vmath.vector4(0.063,0.082,0.184,1)
 local cyan=vmath.vector4(0.4,0.95,0.92,1)
 local cream=vmath.vector4(1,0.9,0.72,1)
@@ -41,6 +43,12 @@ function init(self)
     self.buttons={}; self.expanded=false
     self.header=box(370,55,vmath.vector4(1,1,1,1))
     self.distance=text('MONDPOST',0.9)
+    self.resources=box(370,42,vmath.vector4(1,1,1,1))
+    self.battery_back=gui.new_box_node(vmath.vector3(),vmath.vector3(150,8,0));gui.set_color(self.battery_back,navy)
+    self.battery_fill=gui.new_box_node(vmath.vector3(),vmath.vector3(146,16,0))
+    gui.set_pivot(self.battery_fill,gui.PIVOT_W)
+    self.battery_label=text('',.6)
+    self.stars_label=text('',.65)
     self.status=text('',1)
     self.gas=button(self,'GAS',nil,240,115)
     self.brake=button(self,'BRAKE',nil,240,115)
@@ -70,6 +78,7 @@ function init(self)
 end
 function update(self,dt)
     state.tuning_open=self.expanded
+    gui.set_text(self.dev.label,self.expanded and 'TUNING -' or 'TUNING +')
     local w,h=window.get_size(); local safe=window.get_safe_area()
     local scale=math.min(w/1280,h/720)
     local left=math.max(24*scale,safe.inset_left+12*scale)
@@ -87,7 +96,17 @@ function update(self,dt)
     gui.set_position(self.header,vmath.vector3(left+185*scale,top,0)); gui.set_size(self.header,vmath.vector3(370,55,0));gui.set_scale(self.header,vmath.vector3(scale,scale,1))
     gui.set_position(self.distance,vmath.vector3(left+170*scale,top,0))
     gui.set_scale(self.distance,vmath.vector3(math.max(.8*scale,.54),math.max(.8*scale,.54),1))
-    gui.set_text(self.distance,string.format('MONDPOST  /  %03d m',state.distance))
+    gui.set_text(self.distance,string.format('MONDPOST  %d / %d m',state.distance,math.floor((terrain.finish-180)/10)))
+    local energy_y=top-49*scale
+    gui.set_position(self.resources,vmath.vector3(left+185*scale,energy_y,0));gui.set_scale(self.resources,vmath.vector3(scale,scale,1))
+    gui.set_position(self.battery_back,vmath.vector3(left+94*scale,energy_y-10*scale,0));gui.set_scale(self.battery_back,vmath.vector3(scale,scale,1))
+    gui.set_position(self.battery_fill,vmath.vector3(left+21*scale,energy_y-10*scale,0));gui.set_size(self.battery_fill,vmath.vector3(146*scale*state.energy.battery/100,5*scale,0))
+    gui.set_color(self.battery_fill,state.energy.battery<20 and vmath.vector4(1,.38,.2,1) or cyan)
+    gui.set_position(self.battery_label,vmath.vector3(left+94*scale,energy_y+5*scale,0));gui.set_scale(self.battery_label,vmath.vector3(math.max(.6*scale,.5),math.max(.6*scale,.5),1))
+    gui.set_color(self.battery_label,cream);gui.set_text(self.battery_label,string.format('ENERGY %d%%',math.ceil(state.energy.battery)))
+    gui.set_position(self.stars_label,vmath.vector3(left+270*scale,energy_y,0));gui.set_scale(self.stars_label,vmath.vector3(math.max(.65*scale,.5),math.max(.65*scale,.5),1))
+    gui.set_text(self.stars_label,string.format('STARS %d / %d',state.energy.stars,#terrain.stars))
+    for _,node in ipairs({self.resources,self.battery_back,self.battery_fill,self.battery_label,self.stars_label}) do gui.set_enabled(node,not self.expanded) end
     gui.set_text(self.pause.label,state.paused and 'RESUME' or 'PAUSE')
     local gas,brake=input.pedals(state.input)
     gui.set_color(self.gas.node,gas and vmath.vector4(0.82,0.76,0.68,1) or vmath.vector4(1,1,1,1))
@@ -96,8 +115,16 @@ function update(self,dt)
         local pos=gui.get_position(pedal.label); pos.y=pos.y-8*scale
         gui.set_position(pedal.label,pos); gui.set_scale(pedal.label,vmath.vector3(math.max(1.2*scale,.8),math.max(1.2*scale,.8),1))
     end
-    gui.set_position(self.status,vmath.vector3(w/2,top-83*scale,0))
-    gui.set_text(self.status,state.finished and 'TEST TRACK COMPLETE!  /  RESTART' or (state.paused and 'PAUSED  /  RESUME OR RESTART' or ''))
+    gui.set_position(self.status,vmath.vector3(w/2,top-math.max(92*scale,68),0))
+    local station_distance=energy.next_station(terrain.stations,state.distance*10+180)
+    local status=station_distance and string.format('NEXT SOLAR %d m',station_distance) or 'FINAL LANDING AREA'
+    if station_distance and station_distance>0 and station_distance<75 then status=string.format('SOLAR %d m / BRAKE EARLY',station_distance) end
+    if state.energy.station>0 then status='SOLAR ZONE / RELEASE GAS OR BRAKE TO CHARGE' end
+    if state.energy.charging then status=state.energy.battery>=100 and 'BATTERY FULL / READY TO GO' or 'SOLAR CHARGING' end
+    if state.energy.battery<=0 and not state.energy.charging then status='BATTERY EMPTY / COAST TO SOLAR OR RESTART' end
+    if state.paused then status='PAUSED / RESUME OR RESTART' end
+    if state.finished then status=string.format('ROUTE COMPLETE! %d / %d STARS / RESTART',state.energy.stars,#terrain.stars) end
+    gui.set_text(self.status,status)
     gui.set_scale(self.status,vmath.vector3(math.max(.85*scale,.5),math.max(.85*scale,.5),1))
     gui.set_enabled(self.status,not self.expanded)
     gui.set_enabled(self.panel,self.expanded)
@@ -126,6 +153,7 @@ end
 local function pointer(self,id,a)
     local x=a.x; local y=a.y
     if a.pressed then
+        state.started=true
         for _,b in ipairs(self.buttons) do
             if b.callback and gui.is_enabled(b.hit) and gui.pick_node(b.hit,x,y) then b.callback(); return end
         end
@@ -139,7 +167,7 @@ local function pointer(self,id,a)
 end
 function on_input(self,id,a)
     if id==hash('gas') or id==hash('brake') then
-        if a.pressed and not state.paused and not state.finished then state.input.keys[id==hash('gas') and 'gas' or 'brake']=true end
+        if a.pressed and not state.paused and not state.finished then state.started=true;state.input.keys[id==hash('gas') and 'gas' or 'brake']=true end
         if a.released then state.input.keys[id==hash('gas') and 'gas' or 'brake']=false end
     elseif id==hash('pause') and a.pressed then pause()
     elseif id==hash('restart') and a.pressed then state.restart=true
