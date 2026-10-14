@@ -1,0 +1,456 @@
+{
+  "source_commit": "856acdf",
+  "pillow": "12.3.0",
+  "assets": [
+    {
+      "source": "vehicle/rover-chassis.png",
+      "source_sha256": "efdf04201b165a7c7d1c47eec320de69270c97cfa1c135555b623f00f6cff78f",
+      "runtime": "assets/sprites/mondpost/vehicle/rover-chassis.png",
+      "width": 180,
+      "height": 48,
+      "crop": [
+        117,
+        301,
+        1689,
+        675
+      ],
+      "pivot": [
+        90.0,
+        24.0
+      ],
+      "group": "vehicle",
+      "floor_anchor": [
+        87.43,
+        45
+      ],
+      "use": "chassis at body (0,-7), visual only",
+      "sha256": "40a05e8dff8435df3667cba32eb7378aa565fed60515079992eaa530c75eeadc",
+      "rgba_bytes": 34560
+    },
+    {
+      "source": "vehicle/rover-wheel.png",
+      "source_sha256": "11ff870d989ee7e0a9b1d37de283c1c7018fb8c988d0f7cb5dd9f81dae2cd410",
+      "runtime": "assets/sprites/mondpost/vehicle/rover-wheel.png",
+      "width": 52,
+      "height": 52,
+      "crop": [
+        103,
+        98,
+        1194,
+        1143
+      ],
+      "pivot": [
+        26.0,
+        26.0
+      ],
+      "group": "vehicle",
+      "floor_anchor": [
+        25.63,
+        50
+      ],
+      "use": "tread circle centered, physical radius 24; both wheel bodies",
+      "sha256": "bcdc682b3f90846672d95229d169de67c569090eac7ca5d072d804e14797ea33",
+      "rgba_bytes": 10816
+    },
+    {
+      "source": "vehicle/rover-suspension.png",
+      "source_sha256": "df01b535e83ab4c37f6bd765135c109dc8164831c9ccc6ea02ac6165ed625eea",
+      "runtime": "assets/sprites/mondpost/vehicle/rover-suspension.png",
+      "width": 24,
+      "height": 84,
+      "crop": [
+        172,
+        32,
+        1143,
+        1183
+      ],
+      "pivot": [
+        12.0,
+        42.0
+      ],
+      "group": "vehicle",
+      "floor_anchor": [
+        13.2,
+        79
+      ],
+      "use": "eye centers (12,12) and (12,72); stretch between mounts",
+      "sha256": "35d6eb412d4fd98e86911ac028c86554ddb2268d9221fa15dce2c773da8e952b",
+      "rgba_bytes": 8064
+    },
+    {
+      "source": "vehicle/astronaut-driver.png",
+      "source_sha256": "3fa22d16a2f595293117cd724de9673f4cb7fd69e9cb6a849a001db0d4a69e4f",
+      "runtime": "assets/sprites/mondpost/vehicle/astronaut-driver.png",
+      "width": 68,
+      "height": 88,
+      "crop": [
+        192,
+        48,
+        1110,
+        1207
+      ],
+      "pivot": [
+        34.0,
+        44.0
+      ],
+      "group": "vehicle",
+      "floor_anchor": [
+        45.58,
+        84
+      ],
+      "use": "body attachment (24,32); behind chassis",
+      "sha256": "36d8ad5bb11595a519bbdf79f253a803aedeb7499ab1787101624e9d5b10f96b",
+      "rgba_bytes": 23936
+    },
+    {
+      "source": "vehicle/cargo-box.png",
+      "source_sha256": "06233760f2d2d94841c6b5f3d3c0f4e652d9026a37822ee6d85fcc8360b0b3ca",
+      "runtime": "assets/sprites/mondpost/vehicle/cargo-box.png",
+      "width": 72,
+      "height": 44,
+      "crop": [
+        270,
+        239,
+        1267,
+        807
+      ],
+      "pivot": [
+        36.0,
+        22.0
+      ],
+      "group": "vehicle",
+      "floor_anchor": [
+        35.48,
+        41
+      ],
+      "use": "body attachment (-38,33); behind chassis",
+      "sha256": "9ef279cf270ab18efecfc91f6a066993dca523d1c075498403c544cfc8079743",
+      "rgba_bytes": 12672
+    },
+    {
+      "source": "world/solar-station.png",
+      "source_sha256": "5220ed7a55c0423d3723dd9f3e78d6c934e4d00eda70b8f97081e909878596bf",
+      "runtime": "assets/sprites/mondpost/world/solar-station.png",
+      "width": 160,
+      "height": 148,
+      "crop": [
+        314,
+        86,
+        1244,
+        936
+      ],
+      "pivot": [
+        80.0,
+        74.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        79.62,
+        145
+      ],
+      "use": "bottom center at x=3230; decorative background only",
+      "sha256": "0f84cc99d29b5c7b51c392987e079aab39d42deba45a2a1734a576a47e222f09",
+      "rgba_bytes": 94720
+    },
+    {
+      "source": "world/moon-rocks.png",
+      "source_sha256": "af6edb5a04dc8505d419f60659d4d63bd529631974dd6f0710dc1483109bbd7d",
+      "runtime": "assets/sprites/mondpost/world/moon-rocks.png",
+      "width": 160,
+      "height": 80,
+      "crop": [
+        303,
+        174,
+        1487,
+        741
+      ],
+      "pivot": [
+        80.0,
+        40.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        79.04,
+        77
+      ],
+      "use": "center, beneath the collision surface",
+      "sha256": "aa154bc3d879ea51d22261218e1d57d4ad035a649d127018525b92d3d2443b1e",
+      "rgba_bytes": 51200
+    },
+    {
+      "source": "world/ground-details.png",
+      "source_sha256": "0c7705a52646a687541c2701b3efd6ce9ca82e1723fa043ac90a345403fc5c81",
+      "runtime": "assets/sprites/mondpost/world/ground-details.png",
+      "width": 192,
+      "height": 48,
+      "crop": [
+        228,
+        314,
+        1549,
+        637
+      ],
+      "pivot": [
+        96.0,
+        24.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        102.6,
+        46
+      ],
+      "use": "center, beneath the collision surface",
+      "sha256": "4c1c92da8636f0bc158615493b831b0b90efa12f6482880e528ddf0bb4e0de02",
+      "rgba_bytes": 36864
+    },
+    {
+      "source": "world/finish-flag.png",
+      "source_sha256": "804a5d3859eee5e0dfc9fa3e89d10c5911219b797aedadd117d22825a38ecc5c",
+      "runtime": "assets/sprites/mondpost/world/finish-flag.png",
+      "width": 128,
+      "height": 208,
+      "crop": [
+        140,
+        124,
+        966,
+        1428
+      ],
+      "pivot": [
+        64.0,
+        104.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        28.15,
+        202
+      ],
+      "use": "bottom center at existing finish x=3600",
+      "sha256": "789272a3a4c5d2d7aa0161c55d4dd928ddbe13102b93c88f55f043f60ddbb196",
+      "rgba_bytes": 106496
+    },
+    {
+      "source": "backgrounds/cratered-planet.png",
+      "source_sha256": "76e74261a7369634f32bcc7fdf391b4786dc557ec249509f30833717396b7f34",
+      "runtime": "assets/sprites/mondpost/backgrounds/cratered-planet.png",
+      "width": 384,
+      "height": 384,
+      "crop": [
+        146,
+        83,
+        1168,
+        1124
+      ],
+      "pivot": [
+        192.0,
+        192.0
+      ],
+      "group": "backgrounds",
+      "floor_anchor": [
+        189.78,
+        381
+      ],
+      "use": "center, far background; never collision",
+      "sha256": "cc0b339dc65aeef5a6411fa622490b4030b75ec18115703647a128e65c1584df",
+      "rgba_bytes": 589824
+    },
+    {
+      "source": "backgrounds/mountains-far.png",
+      "source_sha256": "d886b23887d20a063ce2bf69de170cec69b5ae886ac497da6ae4e8d9d3ffbfbf",
+      "runtime": "assets/sprites/mondpost/backgrounds/mountains-far.png",
+      "width": 1000,
+      "height": 136,
+      "crop": [
+        10,
+        262,
+        2162,
+        549
+      ],
+      "pivot": [
+        500.0,
+        68.0
+      ],
+      "group": "backgrounds",
+      "floor_anchor": [
+        503.47,
+        133
+      ],
+      "use": "center; feathered overlapping mirrored cards",
+      "sha256": "56bb3aed4c059440a449da6f879853ac247e58314e42b268cbb4893c2e15b431",
+      "rgba_bytes": 544000
+    },
+    {
+      "source": "backgrounds/mountains-near.png",
+      "source_sha256": "c7540e46cc81a4c389b8e13aa1a2057ff7b679e4080171eec324ee98ef101f90",
+      "runtime": "assets/sprites/mondpost/backgrounds/mountains-near.png",
+      "width": 1000,
+      "height": 170,
+      "crop": [
+        19,
+        219,
+        2154,
+        577
+      ],
+      "pivot": [
+        500.0,
+        85.0
+      ],
+      "group": "backgrounds",
+      "floor_anchor": [
+        499.49,
+        166
+      ],
+      "use": "center; feathered overlapping mirrored cards",
+      "sha256": "b2210c013832b728d1cc20b0371b9ea509feb0cf40d41d60541d5c12f9afea07",
+      "rgba_bytes": 680000
+    },
+    {
+      "source": "backgrounds/star-sparkle.png",
+      "source_sha256": "c54d36b7849f9d7497c65d53d0c396c7d7ff1479f928469107a99b2d11ec8df4",
+      "runtime": "assets/sprites/mondpost/backgrounds/star-sparkle.png",
+      "width": 24,
+      "height": 28,
+      "crop": [
+        364,
+        277,
+        913,
+        953
+      ],
+      "pivot": [
+        12.0,
+        14.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        11.0,
+        26
+      ],
+      "use": "center; sparse background stars",
+      "sha256": "3bf9eac26db47ff1a069a3d02587d5c2f3394108737586c8f509c27b322337b6",
+      "rgba_bytes": 2688
+    },
+    {
+      "source": "effects/moon-dust.png",
+      "source_sha256": "9a440c3a79e8ba1f5306267492ceeb646897d013c47e8b73164c026db9b409fe",
+      "runtime": "assets/sprites/mondpost/effects/moon-dust.png",
+      "width": 64,
+      "height": 48,
+      "crop": [
+        466,
+        262,
+        1131,
+        764
+      ],
+      "pivot": [
+        32.0,
+        24.0
+      ],
+      "group": "world",
+      "floor_anchor": [
+        26.77,
+        46
+      ],
+      "use": "center; bounded eight-sprite particle pool",
+      "sha256": "062665580b6969b3f993d550c8d008f0cc55d3f3dc7fba23b245fd5952a70c33",
+      "rgba_bytes": 12288
+    },
+    {
+      "source": "ui/pedal-brake.png",
+      "source_sha256": "fbec2a8471a0c5ad8acce892386aad8d4c6e8eadc52bc3879d709c73b01d0830",
+      "runtime": "assets/sprites/mondpost/ui/pedal-brake.png",
+      "width": 256,
+      "height": 104,
+      "crop": [
+        144,
+        172,
+        1629,
+        741
+      ],
+      "pivot": [
+        128.0,
+        52.0
+      ],
+      "group": "ui",
+      "floor_anchor": [
+        127.45,
+        100
+      ],
+      "use": "center; separate 240x115 touch rectangle",
+      "sha256": "bb88f799bd71c22412b19a531e5e48a08636485a3173a6730c7a92c1aaa11ab0",
+      "rgba_bytes": 106496
+    },
+    {
+      "source": "ui/pedal-gas.png",
+      "source_sha256": "4d956308f965ccf5025bd8070c2571ef1b7c606bd19d613f899d76299fbf7c71",
+      "runtime": "assets/sprites/mondpost/ui/pedal-gas.png",
+      "width": 256,
+      "height": 100,
+      "crop": [
+        98,
+        66,
+        1854,
+        729
+      ],
+      "pivot": [
+        128.0,
+        50.0
+      ],
+      "group": "ui",
+      "floor_anchor": [
+        127.47,
+        97
+      ],
+      "use": "center; separate 240x115 touch rectangle",
+      "sha256": "cc41c8da749796d158bd57e8303fa3b57b2a4e32a75a3f8792d28951365c94fe",
+      "rgba_bytes": 102400
+    },
+    {
+      "source": "ui/button-pause.png",
+      "source_sha256": "200bf83e9655c1e6e5a3b040142f44091a61cd05ba2355be6538b20737c290c1",
+      "runtime": "assets/sprites/mondpost/ui/button-pause.png",
+      "width": 64,
+      "height": 64,
+      "crop": [
+        337,
+        288,
+        966,
+        912
+      ],
+      "pivot": [
+        32.0,
+        32.0
+      ],
+      "group": "ui",
+      "floor_anchor": [
+        31.54,
+        62
+      ],
+      "use": "center; icon in a 140x55 labelled GUI hit rectangle",
+      "sha256": "133b8177628a8f35adc7b0dac5469495e0b982e9a5c1de74ee5a3d9e1e061418",
+      "rgba_bytes": 16384
+    },
+    {
+      "source": "ui/button-restart.png",
+      "source_sha256": "2accf87d18af46f078c04b83fc3499bb70115cdd03e0cca8a6c40b8c9f2f0475",
+      "runtime": "assets/sprites/mondpost/ui/button-restart.png",
+      "width": 64,
+      "height": 64,
+      "crop": [
+        183,
+        175,
+        1089,
+        1064
+      ],
+      "pivot": [
+        32.0,
+        32.0
+      ],
+      "group": "ui",
+      "floor_anchor": [
+        31.53,
+        61
+      ],
+      "use": "center; icon in a 140x55 labelled GUI hit rectangle",
+      "sha256": "7fc60f4f5fb0083d90fa81835a75a20b5b4822f7fdea3c1303b0c679296d30f0",
+      "rgba_bytes": 16384
+    }
+  ]
+}

@@ -24,3 +24,9 @@ if [[ -n "${HTTPS_PROXY:-}" ]]; then
   command=(python3 tools/with_build_proxy.py "${command[@]}")
 fi
 "${command[@]}" --platform "$platform" --architectures "$architectures" --variant "$variant" --archive --max-cpu-threads 3 --bundle-output "dist/$platform" resolve build bundle
+
+# Ordinary 2D atlases work with the existing sprite/GUI materials; validate compiled output.
+java -cp "$bob" tools/TextureBudget.java \
+  build/default/assets/mondpost-vehicle.texturec build/default/assets/mondpost-world.texturec \
+  build/default/assets/mondpost-backgrounds.texturec build/default/assets/mondpost-ui.texturec \
+  build/default/assets/moon.texturec build/default/assets/soil.texturec

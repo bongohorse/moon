@@ -3,4 +3,4 @@ fonts { name: "default" font: "/assets/fonts/ui.font" }
 material: "/builtins/materials/gui.material"
 max_nodes: 256
 adjust_reference: ADJUST_REFERENCE_DISABLED
-textures { name: "art" texture: "/assets/moon.atlas" }
+textures { name: "art" texture: "/assets/mondpost-ui.atlas" }

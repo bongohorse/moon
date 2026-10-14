@@ -1,0 +1,7 @@
+images { image: "/assets/sprites/mondpost/ui/pedal-brake.png" }
+images { image: "/assets/sprites/mondpost/ui/pedal-gas.png" }
+images { image: "/assets/sprites/mondpost/ui/button-pause.png" }
+images { image: "/assets/sprites/mondpost/ui/button-restart.png" }
+images { image: "/assets/ui-panel.png" }
+margin: 2
+extrude_borders: 2

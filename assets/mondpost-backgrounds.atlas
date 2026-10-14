@@ -1,0 +1,5 @@
+images { image: "/assets/sprites/mondpost/backgrounds/cratered-planet.png" }
+images { image: "/assets/sprites/mondpost/backgrounds/mountains-far.png" }
+images { image: "/assets/sprites/mondpost/backgrounds/mountains-near.png" }
+margin: 2
+extrude_borders: 2

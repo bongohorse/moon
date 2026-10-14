@@ -1,0 +1,4 @@
+default_animation: "astronaut-driver"
+material: "/builtins/materials/sprite.material"
+textures { sampler: "texture_sampler" texture: "/assets/mondpost-vehicle.atlas" }
+blend_mode: BLEND_MODE_ALPHA
